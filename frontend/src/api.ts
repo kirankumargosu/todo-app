@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Task } from "./types";
 
-const API_URL = "http://localhost:8000";
+// const API_URL = "http://localhost:8000";
+const API_URL = process.env.REACT_APP_API_URL!;
 
 export const getTasks = () => axios.get<Task[]>(`${API_URL}/tasks`);
 
