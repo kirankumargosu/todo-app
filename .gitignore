@@ -2,5 +2,5 @@
 /backend/.venv
 /backend/todo.db
 .env
-
+/deploy/
 /frontend/node_modules/
