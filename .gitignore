@@ -3,6 +3,6 @@
 /backend/.venv
 /backend/todo.db
 /backend/learn/
-.env
+do-not-checkin
 /deploy-local/
 /frontend/node_modules/
