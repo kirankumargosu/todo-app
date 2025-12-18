@@ -13,14 +13,15 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Task } from "./types";
 import { getTasks, createTask, updateTask, deleteTask } from "./api";
+const role = localStorage.getItem("role"); // "admin" | "user"
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
 
   const loadTasks = async () => {
-  const res = await getTasks();
-  setTasks(res.data);
+    const res = await getTasks();
+    setTasks(res.data);
   };
 
   useEffect(() => {

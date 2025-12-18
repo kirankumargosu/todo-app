@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Task } from "./types";
+import { Task, User } from "./types";
 
 // const API_URL = "http://localhost:8000";
-const API_URL = "/api";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000" || "/api";
 
 export const getTasks = () => axios.get<Task[]>(`${API_URL}/tasks`);
 
@@ -14,3 +14,22 @@ export const updateTask = (task: Task) =>
 
 export const deleteTask = (id: number) =>
     axios.delete(`${API_URL}/tasks/${id}`);
+
+
+export const login = (username: string, password: string) =>
+    axios.post<User>(`${API_URL}/login`, { username, password });
+
+// export const login = (username: string, password: string) =>
+//     axios.post(`${API_URL}/auth/login`, { username, password });
+
+export const apiFetch = (url: string, options: any = {}) => {
+  const token = localStorage.getItem("token");
+
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`
+    }
+  });
+};

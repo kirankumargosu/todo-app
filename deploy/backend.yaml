@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+        - name: backend
+          image: <docker-user-name>/todo-backend:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: sqlite-data
+              mountPath: /app/data
+      volumes:
+        - name: sqlite-data
+          persistentVolumeClaim:
+            claimName: sqlite-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: todo-backend
+  ports:
+    - port: 8000
+      targetPort: 8000

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-frontend
+  template:
+    metadata:
+      labels:
+        app: todo-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: <docker-user-name>/todo-frontend:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: REACT_APP_API_URL
+              value: http://backend-service:8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: LoadBalancer
+  # loadBalancerIP: 74.225.170.27
+  selector:
+    app: todo-frontend
+  ports:
+    - port: 80
+      targetPort: 80
