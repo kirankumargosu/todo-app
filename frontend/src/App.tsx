@@ -26,7 +26,8 @@ interface User {
 
 // const API = "/api";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000" || "/api";
-
+const TASK_API_URL = `${API_URL}/task`;
+const AUTH_API_URL = `${API_URL}/auth`;
 
 const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
@@ -36,6 +37,15 @@ const App: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const toTitleCase = (s: string) =>
+    s
+      ? s
+        .split(/[\s._-]+/)
+        .filter(Boolean)
+        .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+        .join(" ")
+      : "";
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
@@ -53,11 +63,12 @@ const App: React.FC = () => {
     Authorization: `Bearer ${token}`,
   });
 
+
   // ---------- AUTH ----------
 
   const login = async () => {
     setError("");
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`${AUTH_API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -78,7 +89,7 @@ const App: React.FC = () => {
 
   const register = async () => {
     setError("");
-    const res = await fetch(`${API_URL}/auth/register`, {
+    const res = await fetch(`${AUTH_API_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -103,13 +114,13 @@ const App: React.FC = () => {
   // ---------- TASKS ----------
 
   const loadTasks = async () => {
-    const res = await fetch(`${API_URL}/tasks`, { headers: authHeaders() });
+    const res = await fetch(`${TASK_API_URL}/tasks`, { headers: authHeaders() });
     setTasks(await res.json());
   };
 
   const addTask = async () => {
     if (!title.trim()) return;
-    await fetch(`${API_URL}/tasks`, {
+    await fetch(`${TASK_API_URL}/tasks`, {
       method: "POST",
       headers: authHeaders(),
       body: JSON.stringify({ title }),
@@ -119,7 +130,7 @@ const App: React.FC = () => {
   };
 
   const toggleTask = async (task: Task) => {
-    await fetch(`${API_URL}/tasks/${task.id}`, {
+    await fetch(`${TASK_API_URL}/tasks/${task.id}`, {
       method: "PUT",
       headers: authHeaders(),
       body: JSON.stringify({ ...task, completed: !task.completed }),
@@ -128,7 +139,7 @@ const App: React.FC = () => {
   };
 
   const deleteTask = async (id: number) => {
-    await fetch(`${API_URL}/tasks/${id}`, {
+    await fetch(`${TASK_API_URL}/tasks/${id}`, {
       method: "DELETE",
       headers: authHeaders(),
     });
@@ -138,12 +149,12 @@ const App: React.FC = () => {
   // ---------- USERS (ADMIN) ----------
 
   const loadUsers = async () => {
-    const res = await fetch(`${API_URL}/auth/users`, { headers: authHeaders() });
+    const res = await fetch(`${AUTH_API_URL}/users`, { headers: authHeaders() });
     setUsers(await res.json());
   };
 
   const promote = async (username: string) => {
-    await fetch(`${API_URL}/auth/users/role`, {
+    await fetch(`${AUTH_API_URL}/users/role`, {
       method: "PUT",
       headers: authHeaders(),
       body: JSON.stringify({ username, role: "admin" }),
@@ -183,9 +194,9 @@ const App: React.FC = () => {
   return (
     <Container maxWidth="sm" style={{ marginTop: 40 }}>
       <Paper style={{ padding: 24 }}>
-        <Typography variant="h5">To‑Do App</Typography>
-        <Typography variant="caption">Role: {role}</Typography>
-
+        <Typography variant="h5">The Baa Family To‑Do App</Typography>
+        <Typography variant="caption">User: {toTitleCase(username)}</Typography>
+        <br />
         <Button onClick={logout}>Logout</Button>
         {role === "admin" && <Button onClick={() => { setView("users"); loadUsers(); }}>Manage Users</Button>}
         <Button onClick={() => { setView("tasks"); loadTasks(); }}>Tasks</Button>
