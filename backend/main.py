@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+import argparse
 import uvicorn
 from app.models import User
 # models.Base.metadata.create_all(bind=engine)
@@ -24,10 +25,21 @@ app.add_middleware(
     allow_headers=["*"] ,
 )
 
-
 app.include_router(auth_router)
 app.include_router(task_router)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level=logging.INFO)
+    parser = argparse.ArgumentParser(description="Run the API server")
+    parser.add_argument("--init-db", action="store_true", help="Initialize DB tables before starting the server")
+    args = parser.parse_args()
+
+    if args.init_db:
+        logger.info("--init-db specified: attempting autoupgrade (non-destructive) before starting the server")
+        try:
+            from app.utils import init_db
+            init_db.autoupgrade()
+        except Exception:
+            logger.exception("Failed to initialize / autoupgrade database tables")
+
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
 
