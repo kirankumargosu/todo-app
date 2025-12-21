@@ -7,7 +7,9 @@ import {
   Paper,
 } from "@mui/material";
 // import { login } from "./api";
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000" || "/api";
+const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "http://localhost:8000";
+const TASK_API_URL = `${API_URL}/task`;
+const AUTH_API_URL = `${API_URL}/auth`;
 
 const Login: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   const [username, setUsername] = useState("");
@@ -20,7 +22,7 @@ const Login: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
       console.log("Attempting login for", username);
       // axios.post<User>(`${API_URL}/login`, { username, password });
 
-      const res = await fetch(`${API_URL}/auth/login/`, {
+      const res = await fetch(`${AUTH_API_URL}/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
