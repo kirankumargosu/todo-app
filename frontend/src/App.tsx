@@ -31,14 +31,14 @@ interface User {
 }
 
 // const API = "/api";
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000" || "/api";
+const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "http://localhost:8000";
 const TASK_API_URL = `${API_URL}/task`;
 const AUTH_API_URL = `${API_URL}/auth`;
 
 const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
-  const [view, setView] = useState<"login" | "register" | "tasks" | "users">("login");
+  const [view, setView] = useState<"login" | "register" | "tasks" | "users" | "science">("login");
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -58,6 +58,12 @@ const App: React.FC = () => {
   const [linkUrl, setLinkUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+
+  // Science schedule (admin only)
+  const [weeks, setWeeks] = useState<Array<{ from: string; to: string; study: string[] }>>([]);
+  const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [loadingScience, setLoadingScience] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -164,6 +170,72 @@ const App: React.FC = () => {
     setUsers(await res.json());
   };
 
+  // ---------- SCIENCE (ADMIN) ----------
+
+  const loadScience = async () => {
+    setLoadingScience(true);
+    try {
+      const res = await fetch(`/science-ks3.json`);
+      if (!res.ok) throw new Error(`Failed to fetch schedule: ${res.status}`);
+      const data = await res.json();
+      setWeeks(data);
+      setCurrentWeekIndex(0);
+      setView("science");
+    } catch (err: any) {
+      console.error(err);
+      alert("Failed to load science schedule");
+    } finally {
+      setLoadingScience(false);
+    }
+  };
+
+  const prevWeek = () => setCurrentWeekIndex((i) => Math.max(0, i - 1));
+  const nextWeek = () => setCurrentWeekIndex((i) => Math.min(weeks.length - 1, i + 1));
+
+  const parseDayMonth = (s: string, year: number): Date | null => {
+    if (!s) return null;
+    const parts = s.split("-").map((p) => p.trim());
+    if (parts.length !== 2) return null;
+    const day = parseInt(parts[0], 10);
+    const monthStr = parts[1];
+    const month = new Date(`${monthStr} 1, 2000`).getMonth();
+    if (isNaN(day) || isNaN(month)) return null;
+    return new Date(year, month, day);
+  };
+
+  const findIndexForDate = (d: Date): number => {
+    const yearNow = d.getFullYear();
+    for (let i = 0; i < weeks.length; i++) {
+      const w = weeks[i];
+      for (let delta = -1; delta <= 1; delta++) {
+        const yr = yearNow + delta;
+        const fromDate = parseDayMonth(w.from, yr);
+        const toDate = parseDayMonth(w.to, yr);
+        if (!fromDate || !toDate) continue;
+        // Handle ranges that span year boundary
+        if (toDate < fromDate) toDate.setFullYear(toDate.getFullYear() + 1);
+        if (d >= fromDate && d <= toDate) return i;
+      }
+    }
+    return -1;
+  };
+
+  const jumpToCurrentWeek = () => {
+    const idx = findIndexForDate(new Date());
+    if (idx >= 0) setCurrentWeekIndex(idx);
+    else alert("Current week not found in schedule");
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStartX(e.touches[0].clientX);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX == null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const threshold = 40;
+    if (dx > threshold) prevWeek();
+    else if (dx < -threshold) nextWeek();
+    setTouchStartX(null);
+  };
+
   const promote = async (username: string) => {
     await fetch(`${AUTH_API_URL}/users/role`, {
       method: "PUT",
@@ -211,6 +283,7 @@ const App: React.FC = () => {
         <Button onClick={logout}>Logout</Button>
         {role === "admin" && <Button onClick={() => { setView("users"); loadUsers(); }}>Manage Users</Button>}
         <Button onClick={() => { setView("tasks"); loadTasks(); }}>Tasks</Button>
+        {role === "admin" && <Button onClick={() => { loadScience(); }} disabled={loadingScience}>Science</Button>}
 
         {view === "tasks" && (
           <>
@@ -271,6 +344,53 @@ const App: React.FC = () => {
               </ListItem>
             ))}
           </List>
+        )}
+
+        {view === "science" && role === "admin" && (
+          <Box
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            sx={{ mt: 2 }}
+          >
+            {weeks.length === 0 ? (
+              <Typography>{loadingScience ? "Loading..." : "No schedule available."}</Typography>
+            ) : (
+              <>
+                <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+                  <Button onClick={prevWeek} disabled={currentWeekIndex === 0}>Prev</Button>
+                  <Typography variant="h6">{weeks[currentWeekIndex].from} — {weeks[currentWeekIndex].to}</Typography>
+                  <Button onClick={nextWeek} disabled={currentWeekIndex === weeks.length - 1}>Next</Button>
+                </Box>
+
+                <Box display="flex" justifyContent="center" sx={{ mb: 1 }}>
+                  <Button onClick={jumpToCurrentWeek} disabled={weeks.length === 0}>Jump to current week</Button>
+                </Box>
+
+                <Paper variant="outlined" sx={{ p: 2 }}>
+                  <List>
+                    {weeks[currentWeekIndex].study.map((s, idx) => {
+                      const parts = s.split(":");
+                      const subject = parts[0] || "";
+                      const chapter = parts[1] || "";
+                      const title = parts.slice(2).join(":") || "";
+                      return (
+                        <ListItem key={idx} sx={{ alignItems: 'flex-start' }}>
+                          <ListItemText
+                            primary={<Typography variant="subtitle1">{title}</Typography>}
+                            secondary={<>
+                              <Typography variant="body2" color="textSecondary">{subject} • {chapter}</Typography>
+                            </>}
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Paper>
+
+                <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>Swipe left/right or use Prev/Next to navigate weeks</Typography>
+              </>
+            )}
+          </Box>
         )}
       </Paper>
     </Container>

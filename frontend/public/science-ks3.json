@@ -1,0 +1,192 @@
+[
+    {
+        "from": "22-Dec-2025",
+        "to": "28-Dec-2025",
+        "study": [
+            "Phy:Forces:Understanding speed",
+            "Phy:Forces:Describing journeys with distance-time graphs",
+            "Che:Matter:Using particles to explain matter",
+            "Che:Matter:Understanding solids",
+            "Bio:Organisms:Exploring the human skeleton",
+            "Bio:Organisms:Understanding the role of joints and muscles"
+        ]
+    },
+    {
+        "from": "29-Dec-2025",
+        "to": "04-Jan-2026",
+        "study": [
+            "Phy:Forces:Exploring journeys on distance-time graphs",
+            "Phy:Forces:Investigating the motion of a car on ramp",
+            "Che:Matter:Understanding liquids and gases",
+            "Che:Matter:Exploring diffusion",
+            "Bio:Organisms:Examining interacting muscles",
+            "Bio:Organisms:Exploring problems with the skeletal system",
+            "Bio:Organisms:Understanding organisation of organisms"
+        ]
+    },
+    {
+        "from": "05-Jan-2026",
+        "to": "11-Jan-2026",
+        "study": [
+            "Phy:Forces:Understanding relative motion",
+            "Phy:Forces:Understanding forces",
+            "Phy:Forces:Understanding gravitational fields",
+            "Che:Matter:Explaining changes of state",
+            "Che:Matter:Separating mixtures",
+            "Bio:Organisms:Describing animal and plant cell",
+            "Bio:Organisms:Understanding adaptations of cells"
+        ]
+    },
+    {
+        "from": "12-Jan-2026",
+        "to": "18-Jan-2026",
+        "study": [
+            "Phy:Forces:Understanding mass and weight",
+            "Phy:Forces:Understanding gravity",
+            "Che:Matter:Exploring solutions",
+            "Che:Matter:Understanding distillation",
+            "Che:Matter:Exploring chromatography",
+            "Bio:Organisms:Exploring cells",
+            "Bio:Organisms:Understanding unicellular organisms"
+        ]
+    },
+    {
+        "from": "19-Jan-2026",
+        "to": "25-Jan-2026",
+        "study": [
+            "Phy:Electromagnets:Describing electric circuits",
+            "Phy:Electromagnets:Understanding energy in circuits",
+            "Che:Reactions:Using metals and non-metals",
+            "Che:Reactions:Exploring the reactions of metals with acids",
+            "Bio:Ecosystems:Understanding food webs",
+            "Bio:Ecosystems:Understanding the effects of toxins in the environment"
+        ]
+    },
+    {
+        "from": "26-Jan-2026",
+        "to": "01-Feb-2026",
+        "study": [
+            "Phy:Electromagnets:Explaining resistance",
+            "Phy:Electromagnets:Describing series and parallel circuits",
+            "Che:Reactions:Understanding displacement reactions",
+            "Che:Reactions:Understanding oxidation reactions",
+            "Bio:Ecosystems:Exploring the importance of insects",
+            "Bio:Ecosystems:Exploring ecological balance"
+        ]
+    },
+    {
+        "from": "02-Feb-2026",
+        "to": "08-Feb-2026",
+        "study": [
+            "Phy:Electromagnets:Comparing series and parallel circuits",
+            "Phy:Electromagnets:Investigating static charge",
+            "Che:Reactions:Exploring acids",
+            "Che:Reactions:Exploring alkalis",
+            "Bio:Ecosystems:Exploring flowering plants",
+            "Bio:Ecosystems:Exploring fertilisation"
+        ]
+    },
+    {
+        "from": "09-Feb",
+        "to": "15-Feb",
+        "study": [
+            "Phy:Electromagnets:Explaining static charge",
+            "Phy:Electromagnets:Understanding electric fields",
+            "Che:Reactions:Using indicators",
+            "Che:Reactions:Exploring neutralisation",
+            "Che:Reactions:Investigating neutralisation",
+            "Bio:Ecosystems:Understanding how seeds are dispersed",
+            "Bio:Ecosystems:Understanding how fruits disperse seeds"
+        ]
+    },
+    {
+        "from": "16-Feb-2026",
+        "to": "22-Feb-2026",
+        "study": [
+            "Phy:Energy:Understanding energy transfer by fuels and food",
+            "Phy:Energy:Comparing rates of energy transfers",
+            "Che:Earth:Understanding the structure of the a earth",
+            "Che:Earth:Exploring igneous rocks",
+            "Bio:Genes:Looking at variation",
+            "Bio:Genes:Exploring causes of variation"
+        ]
+    },
+    {
+        "from": "23-Feb-2026",
+        "to": "01-Mar-2026",
+        "study": [
+            "Phy:Energy:Looking at the cost of energy use in the home",
+            "Phy:Energy:Getting the electricity we need",
+            "Che:Earth:Exploring sedimentary rocks",
+            "Che:Earth:Exploring metamorphic rocks",
+            "Bio:Genes:Considering the importance of variation",
+            "Bio:Genes:Understanding the female reproductive system and fertility"
+        ]
+    },
+    {
+        "from": "02-Mar-2026",
+        "to": "08-Mar-2026",
+        "study": [
+            "Phy:Energy:Using electricity responsibly",
+            "Phy:Energy:Energy stores and transfers",
+            "Che:Earth:Understanding the rock cycle",
+            "Che:Earth:Describing stars and galaxies",
+            "Bio:Genes:Understanding the male reproductive system and fertilisation",
+            "Bio:Genes:Learning how a foetus develops"
+        ]
+    },
+    {
+        "from": "09-Mar",
+        "to": "15-Mar",
+        "study": [
+            "Phy:Energy:Exploring energy transfers",
+            "Phy:Energy:Understanding potential energy and kinetic energy",
+            "Phy:Energy:Understanding elastic energy",
+            "Che:Earth:Explaining the effects of the Earth's motion",
+            "Che:Earth:Exploring our neighbours in the Universe",
+            "Che:Earth:Using models in science",
+            "Bio:Genes:Understanding factors affecting a developing foetus",
+            "Bio:Genes:Communicating ideas about smoking in pregnancy"
+        ]
+    },
+    {
+        "from": "16-Mar-2026",
+        "to": "22-Mar-2026",
+        "study": [
+            "Phy:Waves:Exploring sound",
+            "Phy:Waves:Describing sound"
+        ]
+    },
+    {
+        "from": "23-Mar",
+        "to": "29-Mar",
+        "study": [
+            "Phy:Waves:Hearing sounds",
+            "Phy:Waves:Understanding how sound travels through materials"
+        ]
+    },
+    {
+        "from": "30-Mar",
+        "to": "05-Apr",
+        "study": [
+            "Phy:Waves:Learning about the reflection and absorption of sound",
+            "Phy:Waves:Exploring properties of light"
+        ]
+    },
+    {
+        "from": "06-Apr-2026",
+        "to": "12-Apr-2026",
+        "study": [
+            "Phy:Waves:Exploring reflection",
+            "Phy:Waves:Exploring refraction"
+        ]
+    },
+    {
+        "from": "13-Apr-2026",
+        "to": "19-Apr-2026",
+        "study": [
+            "Phy:Waves:Seeing clearly",
+            "Phy:Waves:Exploring coloured light"
+        ]
+    }
+]

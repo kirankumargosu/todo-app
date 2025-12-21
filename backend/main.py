@@ -31,7 +31,19 @@ app.include_router(task_router)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the API server")
     parser.add_argument("--init-db", action="store_true", help="Initialize DB tables before starting the server")
+    parser.add_argument("--init-db-only", action="store_true", help="Run DB autoupgrade and exit (do not start server)")
     args = parser.parse_args()
+
+    if args.init_db_only:
+        logger.info("--init-db-only specified: attempting autoupgrade (non-destructive) and exiting")
+        try:
+            from app.utils import init_db
+            init_db.autoupgrade()
+            logger.info("Autoupgrade completed; exiting as requested (init-db-only)")
+            raise SystemExit(0)
+        except Exception:
+            logger.exception("Failed to initialize / autoupgrade database tables")
+            raise SystemExit(1)
 
     if args.init_db:
         logger.info("--init-db specified: attempting autoupgrade (non-destructive) before starting the server")
