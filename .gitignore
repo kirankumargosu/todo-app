@@ -5,7 +5,8 @@
 /backend/app/models/__pycache__/
 /backend/app/routes/__pycache__/
 /backend/app/schemas/__pycache__/
-/baclend/app/security/__pycache__/
+/backend/app/security/__pycache__/
+/backend/app/utils/__pycache__/
 
 /backend/.venv
 /backend/todo.db

@@ -7,15 +7,21 @@ import {
   Paper,
   List,
   ListItem,
+  ListItemText,
   Checkbox,
   IconButton,
+  Link,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 interface Task {
   id: number;
   title: string;
   completed: boolean;
+  link_url?: string | null;
+  notes?: string | null;
 }
 
 interface User {
@@ -49,6 +55,8 @@ const App: React.FC = () => {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [notes, setNotes] = useState("");
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -120,12 +128,15 @@ const App: React.FC = () => {
 
   const addTask = async () => {
     if (!title.trim()) return;
+    console.log({ title, link_url: linkUrl, notes });
     await fetch(`${TASK_API_URL}/tasks`, {
       method: "POST",
       headers: authHeaders(),
-      body: JSON.stringify({ title }),
+      body: JSON.stringify({ title, link_url: linkUrl || null, notes: notes || null }),
     });
     setTitle("");
+    setLinkUrl("");
+    setNotes("");
     loadTasks();
   };
 
@@ -206,17 +217,43 @@ const App: React.FC = () => {
             {role === "admin" && (
               <>
                 <TextField fullWidth label="New Task" value={title} onChange={(e) => setTitle(e.target.value)} />
-                <Button fullWidth variant="contained" onClick={addTask}>Add Task</Button>
+                <TextField fullWidth label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} style={{ marginTop: 8 }} />
+                <TextField fullWidth label="URL (optional)" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} style={{ marginTop: 8 }} />
+                <Button fullWidth variant="contained" onClick={addTask} sx={{ marginTop: 1 }}>Add Task</Button>
               </>
             )}
 
             <List>
               {tasks.map((t) => (
-                <ListItem key={t.id} secondaryAction={role === "admin" && (
+                <ListItem key={t.id} alignItems="flex-start" secondaryAction={role === "admin" && (
                   <IconButton onClick={() => deleteTask(t.id)}><DeleteIcon /></IconButton>
                 )}>
-                  <Checkbox checked={t.completed} onChange={() => toggleTask(t)} />
-                  <Typography style={{ textDecoration: t.completed ? "line-through" : "none" }}>{t.title}</Typography>
+                  <Checkbox checked={t.completed} onChange={() => toggleTask(t)} sx={{ mr: 2, mt: 0.5 }} />
+
+                  <ListItemText
+                    primary={
+                      <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+                        <Typography variant="subtitle1" style={{ textDecoration: t.completed ? "line-through" : "none" }}>{t.title}</Typography>
+                        {t.link_url && (
+                          <IconButton component="a" href={t.link_url} target="_blank" rel="noopener noreferrer" size="small" aria-label="open link">
+                            <OpenInNewIcon fontSize="small" />
+                          </IconButton>
+                        )}
+                      </Box>
+                    }
+                    primaryTypographyProps={{ component: 'div' }}
+                    secondary={
+                      <Box>
+                        {t.notes && (
+                          <Typography variant="body2" color="textSecondary" sx={{ whiteSpace: 'pre-wrap' }}>{t.notes}</Typography>
+                        )}
+                        {t.link_url && (
+                          <Link href={t.link_url} target="_blank" rel="noopener noreferrer" variant="body2" sx={{ display: 'block', mt: 0.5 }}>{t.link_url}</Link>
+                        )}
+                      </Box>
+                    }
+                    secondaryTypographyProps={{ component: 'div' }}
+                  />
                 </ListItem>
               ))}
             </List>

@@ -6,4 +6,6 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
+    link_url = Column(String, nullable=True)
+    notes = Column(String, nullable=True)
     completed = Column(Boolean, default=False)

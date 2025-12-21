@@ -14,16 +14,9 @@ class UserOut(BaseModel):
     username: str
     role: str
     class Config:
-        # orm_mode = True
         from_attributes = True
 
 class RoleUpdateRequest(BaseModel):
     username: str
     role: str  # "admin" or "user"
     
-# def get_db_user():
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()

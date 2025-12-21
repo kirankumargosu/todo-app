@@ -1,9 +1,13 @@
 from pydantic import BaseModel
+from typing import Optional
+
 # from app.database import SessionLocal
 
 class TaskBase(BaseModel):
     title: str
     completed: bool = False
+    link_url: Optional[str] = None
+    notes: Optional[str] = None
 
 class TaskCreate(TaskBase):
     pass
@@ -14,12 +18,4 @@ class TaskUpdate(TaskBase):
 class TaskResponse(TaskBase):
     id: int
     class Config:
-        # orm_mode = True
         from_attributes = True
-
-# def get_db_task():
-    # db = SessionLocal()
-    # try:
-    #     yield db
-    # finally:
-    #     db.close()
