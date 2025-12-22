@@ -7,7 +7,6 @@ Usage:
 """
 
 import logging
-import argparse
 
 from app.db.database import Base, engine
 
@@ -24,7 +23,6 @@ def create_tables() -> None:
     logger.info("Creating database tables (if not present)...")
     Base.metadata.create_all(bind=engine)
     logger.info("Database tables created / verified.")
-
 
 def autoupgrade() -> None:
     """Attempt a safe, non-destructive schema upgrade.

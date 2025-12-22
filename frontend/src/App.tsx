@@ -37,10 +37,17 @@ interface User {
   role: string;
 }
 
+interface VersionResponse {
+  ui_version: string;
+  backend_version: string;
+  app_version: string;
+};
+
 // const API = "/api";
 const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "http://localhost:8000";
 const TASK_API_URL = `${API_URL}/task`;
 const AUTH_API_URL = `${API_URL}/auth`;
+const COMMON_API_URL = `${API_URL}/common`;
 
 const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
@@ -50,6 +57,11 @@ const App: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const [version, setVersion] = useState<VersionResponse | null>(null);
+  const [appversion, setAppVersion] = useState("");
+  const [uiversion, setUiVersion] = useState("");
+  const [backendversion, setBackendVersion] = useState("");
 
   const toTitleCase = (s: string) =>
     s
@@ -72,7 +84,17 @@ const App: React.FC = () => {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [loadingScience, setLoadingScience] = useState(false);
 
+  const loadVersions = async () => {
+    const res = await fetch(`${COMMON_API_URL}/version`, {
+      headers: authHeaders(),
+    });
+
+    const data: VersionResponse = await res.json();
+    setVersion(data);
+  };
+
   useEffect(() => {
+    loadVersions();
     if (token) {
       setView("tasks");
       loadTasks();
@@ -288,8 +310,10 @@ const App: React.FC = () => {
      <AppBar position="static" />
     <Container maxWidth="sm" style={{ marginTop: 40 }}>
       <Paper style={{ padding: 24 }}>
-        <Typography variant="h5">The Baa Family To‑Do App</Typography>
-        <Typography variant="caption">User: {toTitleCase(localStorage.getItem("username") || '')}</Typography>
+        <Typography variant="h5">The Baa Family To-Do App</Typography>        
+        <Typography variant="caption" display="block">User: {toTitleCase(localStorage.getItem("username") || '')}</Typography>
+        {/* {console.log(version['ui_version'])} */}
+        <Typography variant="caption" fontSize="x-small" color="gray">Version: {version?.app_version}.{version?.ui_version}.{version?.backend_version} </Typography>
         <br />
         <Button onClick={() => { setView("tasks"); loadTasks(); }}>Tasks</Button>
         {<Button onClick={() => { loadScience(); }} disabled={loadingScience}>Science Schedule</Button>}
