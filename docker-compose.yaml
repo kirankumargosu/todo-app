@@ -5,19 +5,22 @@ services:
     restart: unless-stopped
     environment:
       - DATABASE_URL=sqlite:////app/data/todo.db
-      - SECRET_KEY=HIGHLY_CONFIDENTIAL_KEY
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
-      - todo-db:/app/data
+      - ${DB_PATH}:/app/data
     ports:
       - "8000:8000"
   frontend:
     build: ./frontend
     container_name: todo-frontend
     restart: unless-stopped
+    depends_on:
+      - backend
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://192.168.0.137:8000
+      - REACT_APP_VERION=0.0.1
+      - REACT_APP_API_URL=http://backend:8000
 
 volumes:
   todo-db:
