@@ -4,11 +4,11 @@ import os
 from logging import getLogger
 logger = getLogger(__name__)
 
-# DATABASE_URL = "sqlite:///./todo.db"
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL not set")
 
+logger.info(f"Database used is {DATABASE_URL}")
 engine = create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
 )

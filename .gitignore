@@ -21,3 +21,5 @@ do-not-checkin
 
 /tools/
 science-ks3
+
+.env

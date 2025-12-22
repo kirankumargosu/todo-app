@@ -37,9 +37,11 @@ def autoupgrade() -> None:
     Note: This is intended for simple schema changes (adding columns). More complex
     migrations (renames, type changes, column drops) should use Alembic migrations.
     """
+    logger.info("Autoupgrade started")
     from sqlalchemy import inspect
 
     inspector = inspect(engine)
+    logger.info("inspected")
     existing_tables = set(inspector.get_table_names())
 
     # 1) Create any entirely missing tables
