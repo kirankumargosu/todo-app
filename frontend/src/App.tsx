@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  AppBar,
   Container,
   TextField,
   Button,
@@ -12,6 +13,12 @@ import {
   IconButton,
   Link,
   Box,
+  TableContainer,
+  Table,
+  TableHead,
+  TableCell,
+  TableBody,
+  TableRow,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
@@ -97,6 +104,8 @@ const App: React.FC = () => {
     const data = await res.json();
     localStorage.setItem("token", data.access_token);
     localStorage.setItem("role", data.role);
+    localStorage.setItem("username", data.username)
+    setUsername(data.username)
     setToken(data.access_token);
     setRole(data.role);
   };
@@ -236,11 +245,11 @@ const App: React.FC = () => {
     setTouchStartX(null);
   };
 
-  const promote = async (username: string) => {
+  const promote = async (username: string, role: string) => {
     await fetch(`${AUTH_API_URL}/users/role`, {
       method: "PUT",
       headers: authHeaders(),
-      body: JSON.stringify({ username, role: "admin" }),
+      body: JSON.stringify({ username, role }),
     });
     loadUsers();
   };
@@ -275,16 +284,18 @@ const App: React.FC = () => {
   }
 
   return (
+    <>
+     <AppBar position="static" />
     <Container maxWidth="sm" style={{ marginTop: 40 }}>
       <Paper style={{ padding: 24 }}>
         <Typography variant="h5">The Baa Family To‑Do App</Typography>
-        <Typography variant="caption">User: {toTitleCase(username)}</Typography>
+        <Typography variant="caption">User: {toTitleCase(localStorage.getItem("username") || '')}</Typography>
         <br />
-        <Button onClick={logout}>Logout</Button>
-        {role === "admin" && <Button onClick={() => { setView("users"); loadUsers(); }}>Manage Users</Button>}
         <Button onClick={() => { setView("tasks"); loadTasks(); }}>Tasks</Button>
-        {role === "admin" && <Button onClick={() => { loadScience(); }} disabled={loadingScience}>Science</Button>}
-
+        {<Button onClick={() => { loadScience(); }} disabled={loadingScience}>Science Schedule</Button>}
+        {/* {role === "admin" && <Button onClick={() => { loadScience(); }} disabled={loadingScience}>Science Schedule</Button>} */}
+        {role === "admin" && <Button onClick={() => { setView("users"); loadUsers(); }}>Manage Users</Button>}
+        <Button onClick={logout}>Logout</Button>
         {view === "tasks" && (
           <>
             {role === "admin" && (
@@ -301,7 +312,8 @@ const App: React.FC = () => {
                 <ListItem key={t.id} alignItems="flex-start" secondaryAction={role === "admin" && (
                   <IconButton onClick={() => deleteTask(t.id)}><DeleteIcon /></IconButton>
                 )}>
-                  <Checkbox checked={t.completed} onChange={() => toggleTask(t)} sx={{ mr: 2, mt: 0.5 }} />
+                  {role != "ro" && (<Checkbox checked={t.completed} onChange={() => toggleTask(t)} sx={{ mr: 2, mt: 0.5 }} />)}
+                  
 
                   <ListItemText
                     primary={
@@ -334,19 +346,44 @@ const App: React.FC = () => {
         )}
 
         {view === "users" && role === "admin" && (
-          <List>
-            {users.map((u) => (
-              <ListItem key={u.id}>
-                {u.username} — {u.role}
-                {u.role !== "admin" && (
-                  <Button onClick={() => promote(u.username)}>Make Admin</Button>
-                )}
-              </ListItem>
-            ))}
-          </List>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="a dense table">
+              <TableHead>
+                <TableCell> Name </TableCell>
+                <TableCell> Current Role </TableCell>
+                <TableCell> Make Admin </TableCell>
+                <TableCell> Make User</TableCell>
+                <TableCell> Make Readonly </TableCell>
+              </TableHead>
+              <TableBody>
+                {users.map((u) => (
+                  <TableRow>
+                    <TableCell>
+                      {toTitleCase(u.username)}
+                    </TableCell>
+                    <TableCell>
+                      {toTitleCase(u.role)}
+                    </TableCell>
+
+                    <TableCell>
+                      <Button variant="outlined" size="small" onClick={() => promote(u.username, 'admin')}>Admin</Button>
+                    </TableCell>
+
+                    <TableCell>
+                      <Button variant="outlined" size="small" onClick={() => promote(u.username, 'user')}>User</Button>
+                    </TableCell>
+
+                    <TableCell>
+                      <Button variant="outlined" size="small" onClick={() => promote(u.username, 'ro')}>Readonly</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
 
-        {view === "science" && role === "admin" && (
+        {view === "science" && (
           <Box
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -394,6 +431,7 @@ const App: React.FC = () => {
         )}
       </Paper>
     </Container>
+    </>
   );
 };
 

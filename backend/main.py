@@ -1,16 +1,15 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
-from typing import List
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import argparse
 import uvicorn
-from app.models import User
-# models.Base.metadata.create_all(bind=engine)
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 logging.getLogger("uvicorn").setLevel(logging.INFO)
+from dotenv import load_dotenv
+load_dotenv()
+import os
+logger.info (os.getenv("DATABASE_URL"))
 
 from app.routes import task_router
 from app.routes import auth_router
@@ -29,6 +28,7 @@ app.include_router(auth_router)
 app.include_router(task_router)
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description="Run the API server")
     parser.add_argument("--init-db", action="store_true", help="Initialize DB tables before starting the server")
     parser.add_argument("--init-db-only", action="store_true", help="Run DB autoupgrade and exit (do not start server)")
