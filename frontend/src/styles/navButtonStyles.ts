@@ -21,3 +21,12 @@ export const scienceButton = (active: boolean): SxProps<Theme> => ({
     backgroundColor: active ? "#2e7d32" : "rgba(56, 142, 60, 0.1)",
   },
 });
+
+export const homeButton = (active: boolean): SxProps<Theme> => ({
+  backgroundColor: active ? "#2b4e9aff" : "transparent",
+  color: active ? "white" : "#2b4e9aff",
+  borderColor: "#2b4e9aff",
+  "&:hover": {
+    backgroundColor: active ? "#14357cff" : "rgba(7, 14, 65, 0.1)",
+  },
+});

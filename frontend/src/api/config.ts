@@ -4,3 +4,4 @@ export const API_URL =
 export const TASK_API_URL = `${API_URL}/task`;
 export const AUTH_API_URL = `${API_URL}/auth`;
 export const COMMON_API_URL = `${API_URL}/common`;
+export const CAMERA_API_URL = `${API_URL}/camera`;

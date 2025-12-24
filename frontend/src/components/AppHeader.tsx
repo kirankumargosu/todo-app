@@ -1,8 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import type { CommonAppDetails } from "../types/common";
-const appName = process.env.REACT_APP_NAME || "My App";
-
 
 type AppHeaderProps = {
     onLogout: () => void;

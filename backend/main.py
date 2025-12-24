@@ -11,7 +11,7 @@ load_dotenv()
 import os
 # logger.info (os.getenv("DATABASE_URL"))
 
-from app.routes import task_router, auth_router, common_router
+from app.routes import task_router, auth_router, common_router, camera_router
 
 app = FastAPI()
 # Allow frontend access
@@ -26,6 +26,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(task_router)
 app.include_router(common_router)
+app.include_router(camera_router)
 
 if __name__ == "__main__":
 
