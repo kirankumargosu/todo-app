@@ -3,8 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.models import Task
 from typing import List
 from app.schemas.task_schema import TaskCreate, TaskUpdate, TaskResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.db.database import get_db
+
 from app.dependencies.dependencies import require_admin
 import logging
 logger = logging.getLogger(__name__)
@@ -13,11 +14,13 @@ task_router = APIRouter(prefix="/task", tags=["task"])
 
 @task_router.get("/tasks", response_model=List[TaskResponse])
 def get_tasks(db: Session = Depends(get_db)):
-    return db.query(Task).all()
+    return db.query(Task).options(joinedload(Task.assigned_user)).all()
 
 @task_router.post("/tasks", response_model=TaskResponse, dependencies=[Depends(require_admin)])
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
-    db_task = Task(title=task.title, completed=False, link_url=task.link_url, notes=task.notes)
+    logger.info(task.to_string())
+    db_task = Task(title=task.title, completed=False, link_url=task.link_url, notes=task.notes, assigned_user_id=task.assigned_user_id)
+    logger.info(db_task.to_string())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -32,6 +35,7 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
     db_task.completed = task.completed
     db_task.link_url = task.link_url
     db_task.notes = task.notes
+    db_task.assigned_user_id = task.assigned_user_id
     db.commit()
     db.refresh(db_task)
     return db_task

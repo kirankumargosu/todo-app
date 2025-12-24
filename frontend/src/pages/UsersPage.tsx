@@ -47,7 +47,7 @@ export default function UsersPage({ token, role }: UsersPageProps) {
     <Box sx={{ width: "100%" }}>
       {Object.entries(groupedUsers).map(([roleName, usersInRole]) => (
         <Box key={roleName} sx={{ mb: 3 }}>
-          {/* Role header */}
+          {/* Role header */}          
           <Typography variant="subtitle1" sx={{ color: roleColors[roleName], mb: 1 }}>
             {roleName.toUpperCase()}
           </Typography>

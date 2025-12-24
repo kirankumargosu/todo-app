@@ -24,7 +24,8 @@ export function useTasks(token: string | null) {
   const addTask = async (
     title: string,
     link_url?: string,
-    notes?: string
+    notes?: string,
+    assigned_user_id?: number | null
   ) => {
     if (!title.trim()) return;
     await fetch(`${TASK_API_URL}/tasks`, {
@@ -34,6 +35,7 @@ export function useTasks(token: string | null) {
         title,
         link_url: link_url || null,
         notes: notes || null,
+        assigned_user_id: assigned_user_id ?? null,
       }),
     });
     loadTasks();
