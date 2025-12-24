@@ -30,7 +30,8 @@ class CameraStream:
                 "-f", "hls",
                 "-hls_time", "2",
                 "-hls_list_size", "5",
-                "-hls_flags", "delete_segments+append_list",
+                # "-hls_flags", "delete_segments+append_list",
+                "-hls_flags", "delete_segments",
                 "-hls_base_url", f"/camera/{self.name}/hls/",
                 playlist_path,
             ]

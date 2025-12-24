@@ -10,6 +10,9 @@ services:
       - UI_VERSION=${UI_VERSION}
       - BACKEND_VERSION=${BACKEND_VERSION}
       - APP_NAME=${APP_NAME}
+      - CAMERA1=${CAMERA1}
+      - CAMERA2=${CAMERA2}
+      - HLS_DIR=${HLS_DIR}
     volumes:
       - ${DB_PATH}:/app/data
     ports:
@@ -24,3 +27,4 @@ services:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=http://backend:8000
+
