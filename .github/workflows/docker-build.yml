@@ -25,6 +25,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Generate timestamp version
+        id: vars
+        run: |
+          VERSION=$(date +'%Y%m%d%H%M')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       # ---------- Backend ----------
       - name: Build & push backend
         uses: docker/build-push-action@v5
@@ -34,6 +40,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend:${{ env.VERSION }}
 
       # ---------- Frontend ----------
       - name: Build & push frontend
@@ -44,5 +51,6 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend:${{ env.VERSION }}
           build-args: |
             REACT_APP_API_URL=http://backend-service:8000
