@@ -26,15 +26,15 @@ def get_current_user(token: str = Depends(oauth2_scheme),
     :rtype: User
     # Extracts user information from the JWT token and retrieves the corresponding User from the database.
     """
-    logger.info(f"Decoding token: {token}")
+    # logger.info(f"Decoding token: {token}")
     payload = decode_access_token(token)
-    logger.info(f"Token {token} payload: {payload}")
+    # logger.info(f"Token {token} payload: {payload}")
 
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail="Invalid or expired token")
 
-    logger.debug(f"Payload extracted: {payload}")
+    # logger.debug(f"Payload extracted: {payload}")
     username = payload.get("sub")
     if not username:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

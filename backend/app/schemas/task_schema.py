@@ -8,6 +8,7 @@ class TaskBase(BaseModel):
     completed: bool = False
     link_url: Optional[str] = None
     notes: Optional[str] = None
+    assigned_to: Optional[int] = None
 
 class TaskCreate(TaskBase):
     pass

@@ -24,7 +24,7 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def decode_access_token(token: str):
-    logger.debug(f"Decoding token in auth.py: {token} using SECRET_KEY: {SECRET_KEY} and ALGORITHM: {ALGORITHM}")
+    # logger.debug(f"Decoding token in auth.py: {token} using SECRET_KEY: {SECRET_KEY} and ALGORITHM: {ALGORITHM}")
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     return payload
     
