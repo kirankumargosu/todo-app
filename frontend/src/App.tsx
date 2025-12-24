@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button, Box, Container } from "@mui/material";
+import { useState } from "react";
+import { Button, Box, Container} from "@mui/material";
 import { useAuth } from "./hooks/useAuth";
 import { useCommonAppDetails } from "./hooks/useCommon";
 
@@ -9,22 +9,26 @@ import TasksPage from "./pages/TasksPage";
 import UsersPage from "./pages/UsersPage";
 import SciencePage from "./pages/SciencePage";
 import CameraPage from "./pages/CameraPage";
+import ProfilePage from "./pages/ProfilePage";
 
 
 import { tasksButton, usersButton, scienceButton, homeButton } from "./styles/navButtonStyles";
 import Hls from 'hls.js';
 
 export default function App() {
-    const { token, role, login, logout } = useAuth();
-    const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "home" >("tasks");
+    const { token, role, login, register, logout, username } = useAuth();
+    const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "home" | "profile">("tasks");
     const commonAppDetails = useCommonAppDetails();
-    if (!token) return <LoginPage onLogin={login} />;
-    
-
+    if (!token) return <LoginPage onLogin={login} onRegister={register}/>;
 
     return (
         <>
-            <AppHeader onLogout={logout} commonAppDetails={commonAppDetails}/>
+            <AppHeader
+                onLogout={logout}
+                onProfileClick={() => setView("profile")}
+                username={username}
+                commonAppDetails={commonAppDetails}
+            />
             {/* Navigation buttons at the top */}
             <Box
                 sx={{
@@ -84,10 +88,11 @@ export default function App() {
                 }}
             >
                 {/* <VersionDisplay version={version} /> */}
-                {view === "tasks" && <TasksPage token={token} role={role} />}
+                {view === "tasks" && <TasksPage token={token} role={role} username={username} />}
                 {view === "users" && <UsersPage token={token} role={role} />}
                 {view === "home" && <CameraPage token={token} role={role} />}
                 {view === "science" && <SciencePage />}
+                {view === "profile" && <ProfilePage />}
         </Container>
         </>
     );

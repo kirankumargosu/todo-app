@@ -11,6 +11,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Task } from "../types/task";
 
+import { toTitleCase } from "../utils/strings";
+
 type Props = {
   task: Task;
   role: string | null;
@@ -22,6 +24,11 @@ export function TaskItem({ task, role, onToggle, onDelete }: Props) {
   return (
     <ListItem
       alignItems="flex-start"
+      sx={{
+        border: "1px solid rgba(0,0,0,0.08)",
+        borderRadius: 1,
+        mb: 1,
+      }}
       secondaryAction={
         role === "admin" && (
           <IconButton onClick={() => onDelete(task.id)}>
@@ -67,6 +74,16 @@ export function TaskItem({ task, role, onToggle, onDelete }: Props) {
         primaryTypographyProps={{ component: "div" }}
         secondary={
           <>
+            {/* 🆕 Assigned user */}
+            <Box display="flex" alignItems="center" gap={0.5} mb={0.5}>
+              {/* <PersonIcon fontSize="small" color="action" /> */}
+              {/* <Typography variant="body2" color="text.secondary">
+                {task.assigned_user
+                  ? toTitleCase(task.assigned_user.username)
+                  : "Unassigned"}
+              </Typography> */}
+            </Box>
+
             {task.notes && (
               <Typography
                 variant="body2"
@@ -76,6 +93,7 @@ export function TaskItem({ task, role, onToggle, onDelete }: Props) {
                 {task.notes}
               </Typography>
             )}
+
             {task.link_url && (
               <Link
                 href={task.link_url}

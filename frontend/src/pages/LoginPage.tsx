@@ -5,27 +5,44 @@ import {
   Paper,
   TextField,
   Typography,
+  Stack,
 } from "@mui/material";
 
 type LoginPageProps = {
   onLogin: (username: string, password: string) => Promise<void>;
+  onRegister: (username: string, password: string) => Promise<void>;
 };
 
-export default function LoginPage({ onLogin }: LoginPageProps) {
+export default function LoginPage({ onLogin, onRegister }: LoginPageProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<"login" | "register" | null>(null);
+
+  const isDisabled = username.trim() === "" || password.trim() === "";
 
   const handleLogin = async () => {
     setError(null);
-    setLoading(true);
+    setLoadingAction("login");
     try {
       await onLogin(username, password);
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
+    }
+  };
+
+  const handleRegister = async () => {
+    setError(null);
+    setLoadingAction("register");
+    try {
+      await onRegister(username, password);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoadingAction(null);
     }
   };
 
@@ -58,15 +75,41 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           </Typography>
         )}
 
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 2 }}
-          onClick={handleLogin}
-          disabled={loading}
-        >
-          {loading ? "Logging in…" : "Login"}
-        </Button>
+        <Stack direction="row" spacing={2} mt={2}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleLogin}
+            disabled={isDisabled || loadingAction !== null}
+            sx={{
+              "&.Mui-disabled": {
+                backgroundColor: "primary.main",
+                color: "white",
+                opacity: 0.6,
+              },
+            }}
+          >
+            {loadingAction === "login" ? "Logging in…" : "Login"}
+          </Button>
+
+          <Button
+            fullWidth
+            variant="contained"
+            color="warning"
+            onClick={handleRegister}
+            disabled={isDisabled || loadingAction !== null}
+            sx={{
+              "&.Mui-disabled": {
+                backgroundColor: "warning.main",
+                color: "white",
+                opacity: 0.6,
+              },
+            }}
+          >
+            {loadingAction === "register" ? "Registering…" : "Register"}
+          </Button>
+        </Stack>
       </Paper>
     </Container>
   );
