@@ -4,5 +4,4 @@ export interface Task {
   completed: boolean;
   link_url?: string | null;
   notes?: string | null;
-  assigned_to?: number;
 }

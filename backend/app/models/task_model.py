@@ -9,4 +9,3 @@ class Task(Base):
     link_url = Column(String, nullable=True)
     notes = Column(String, nullable=True)
     completed = Column(Boolean, default=False)
-    assigned_to = Column(Integer, nullable=True)
