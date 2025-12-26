@@ -176,7 +176,7 @@ export default function TasksPage({ token, role, username }: Props) {
       )}
 
       {/* Progress bar */}
-      {completionPercent > 0 && currentGroup && groupedTasks[currentGroup].length > 0 && (
+      {currentGroup && groupedTasks[currentGroup].length > 0 && currentGroup && groupedTasks[currentGroup].length > 0 && (
         <Box sx={{ width: "100%", mb: 2, mt: 2 }}>
           <LinearProgress
             variant="determinate"
