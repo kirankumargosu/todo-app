@@ -10,7 +10,6 @@ class Task(Base):
     link_url = Column(String, nullable=True)
     notes = Column(String, nullable=True)
     completed = Column(Boolean, default=False)
-    # new column with foreign key
     assigned_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     
     # relationship

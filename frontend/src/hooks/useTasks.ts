@@ -16,7 +16,7 @@ export function useTasks(token: string | null) {
     setLoading(true);
     const res = await fetch(`${TASK_API_URL}/tasks`, {
       headers: authHeaders(),
-    });
+    });    
     setTasks(await res.json());
     setLoading(false);
   };

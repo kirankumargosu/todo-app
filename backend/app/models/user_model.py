@@ -13,3 +13,4 @@ class User(Base):
 
     # relationship
     tasks = relationship("Task", back_populates="assigned_user")
+    polls = relationship("Poll", back_populates="created_user")

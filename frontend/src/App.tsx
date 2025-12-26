@@ -10,15 +10,18 @@ import UsersPage from "./pages/UsersPage";
 import SciencePage from "./pages/SciencePage";
 import CameraPage from "./pages/CameraPage";
 import ProfilePage from "./pages/ProfilePage";
+import MediaPage from "./pages/MediaPage";
 
 
 import { tasksButton, usersButton, scienceButton, homeButton } from "./styles/navButtonStyles";
-import Hls from 'hls.js';
+
+
 
 export default function App() {
     const { token, role, login, register, logout, username } = useAuth();
-    const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "home" | "profile">("tasks");
+    const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "home" | "profile" | "media">("tasks");
     const commonAppDetails = useCommonAppDetails();
+    const HOME_AUTOMATION_ENABLED = process.env.REACT_APP_HOME_AUTOMATION ?? true;
     if (!token) return <LoginPage onLogin={login} onRegister={register}/>;
 
     return (
@@ -65,8 +68,16 @@ export default function App() {
                 >
                     Science Schedule
                 </Button>
+                    {role !== "guest" && (
+                        <Button
+                            variant={view === "media" ? "contained" : "outlined"}
+                            onClick={() => setView("media")}
+                        >
+                        Media
+                </Button>
+                )}
 
-                {role === "admin" && (
+                {role === "admin" && HOME_AUTOMATION_ENABLED && (
                     <Button
                     variant={view === "home" ? "contained" : "outlined"}
                     sx={homeButton(view === "home")}
