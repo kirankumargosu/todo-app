@@ -14,13 +14,15 @@ task_router = APIRouter(prefix="/task", tags=["task"])
 
 @task_router.get("/tasks", response_model=List[TaskResponse])
 def get_tasks(db: Session = Depends(get_db)):
-    return db.query(Task).options(joinedload(Task.assigned_user)).all()
+    tasks = db.query(Task).options(joinedload(Task.assigned_user)).all() 
+    logger.debug(tasks)
+    return tasks
 
 @task_router.post("/tasks", response_model=TaskResponse, dependencies=[Depends(require_admin)])
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
-    logger.info(task.to_string())
+    logger.debug(task.to_string())
     db_task = Task(title=task.title, completed=False, link_url=task.link_url, notes=task.notes, assigned_user_id=task.assigned_user_id)
-    logger.info(db_task.to_string())
+    logger.debug(db_task.to_string())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
