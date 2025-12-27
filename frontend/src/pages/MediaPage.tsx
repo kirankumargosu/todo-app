@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -7,11 +6,13 @@ import {
   CardMedia,
   Typography,
   CircularProgress,
+  useTheme,
+  Breadcrumbs,
+  Link,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import FolderIcon from "@mui/icons-material/Folder";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import { Breadcrumbs, Link } from "@mui/material";
 import { useMedia } from "../hooks/useMedia";
 import { MEDIA_API_URL } from "../api/config";
 
@@ -23,7 +24,7 @@ type Props = {
 export default function MediaPage({ token, role }: Props) {
   const { items, path, loading, error, navigate } = useMedia();
   const pathParts = path ? path.split("/").filter(Boolean) : [];
-  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  const theme = useTheme();
 
   const openItem = (item: any) => {
     if (item.type === "folder") {
@@ -48,6 +49,7 @@ export default function MediaPage({ token, role }: Props) {
 
   return (
     <Box sx={{ width: "100%" }}>
+      {/* Breadcrumbs */}
       <Breadcrumbs sx={{ mb: 2 }}>
         <Link
           underline="hover"
@@ -71,25 +73,32 @@ export default function MediaPage({ token, role }: Props) {
         ))}
       </Breadcrumbs>
 
-        <Grid container spacing={2}>
-        {items.map(item => (
-            <Grid key={item.name} size={{xs: 6, sm: 4, md: 3}}>
-            <Card sx={{ borderRadius: 2 }}>
-                <CardActionArea onClick={() => openItem(item)}>
+      <Grid container spacing={2}>
+        {items.map((item) => (
+          <Grid key={item.name} size={{xs: 6, sm: 4, md: 3}}>
+            <Card
+              sx={{
+                borderRadius: 2,
+                backgroundColor: theme.palette.background.paper,
+                transition: "box-shadow 0.2s",
+                "&:hover": { boxShadow: 6 },
+              }}
+            >
+              <CardActionArea onClick={() => openItem(item)}>
                 {item.type === "folder" ? (
-                    <Box
+                  <Box
                     sx={{
-                        height: 140,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#f5f5f5",
+                      height: 140,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: theme.palette.action.hover,
                     }}
-                    >
+                  >
                     <FolderIcon sx={{ fontSize: 60 }} />
-                    </Box>
+                  </Box>
                 ) : (
-                    <Box sx={{ position: "relative" }}>
+                  <Box sx={{ position: "relative" }}>
                     <CardMedia
                       component={item.type === "video" ? "video" : "img"}
                       height="140"
@@ -100,30 +109,34 @@ export default function MediaPage({ token, role }: Props) {
                       controls={item.type === "video"}
                     />
                     {item.type === "video" && (
-                        <PlayCircleOutlineIcon
+                      <PlayCircleOutlineIcon
                         sx={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            fontSize: 48,
-                            color: "rgba(255,255,255,0.8)",
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          fontSize: 48,
+                          color: "rgba(255,255,255,0.8)",
                         }}
-                        />
+                      />
                     )}
-                    </Box>
+                  </Box>
                 )}
                 <CardContent sx={{ p: 1 }}>
-                    <Typography variant="body2" noWrap align="center">
+                  <Typography
+                    variant="body2"
+                    noWrap
+                    align="center"
+                    color="text.primary"
+                  >
                     {item.name}
-                    </Typography>
+                  </Typography>
                 </CardContent>
-                </CardActionArea>
+              </CardActionArea>
             </Card>
-            </Grid>
+          </Grid>
         ))}
-        </Grid>
-
+      </Grid>
     </Box>
   );
 }

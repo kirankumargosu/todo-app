@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, Box, Container} from "@mui/material";
+import { useState, useMemo } from "react";
+import { Button, Box, Container, ThemeProvider, CssBaseline, useMediaQuery } from "@mui/material";
 import { useAuth } from "./hooks/useAuth";
 import { useCommonAppDetails } from "./hooks/useCommon";
 
@@ -11,8 +11,7 @@ import SciencePage from "./pages/SciencePage";
 import CameraPage from "./pages/CameraPage";
 import ProfilePage from "./pages/ProfilePage";
 import MediaPage from "./pages/MediaPage";
-
-
+import { getTheme } from "./styles/theme"; // updated theme function
 import { tasksButton, usersButton, scienceButton, homeButton } from "./styles/navButtonStyles";
 
 
@@ -22,10 +21,18 @@ export default function App() {
     const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "home" | "profile" | "media">("tasks");
     const commonAppDetails = useCommonAppDetails();
     const HOME_AUTOMATION_ENABLED = process.env.REACT_APP_HOME_AUTOMATION ?? true;
-    if (!token) return <LoginPage onLogin={login} onRegister={register}/>;
+
+    // Detect system dark mode preference
+    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+    // Create MUI theme based on system preference
+    const theme = useMemo(() => getTheme(prefersDarkMode ? "dark" : "light"), [prefersDarkMode]);
+
+    if (!token) return <LoginPage onLogin={login} onRegister={register} />;
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
             <AppHeader
                 onLogout={logout}
                 onProfileClick={() => setView("profile")}
@@ -53,11 +60,11 @@ export default function App() {
 
                 {role === "admin" && (
                     <Button
-                    variant={view === "users" ? "contained" : "outlined"}
-                    sx={usersButton(view === "users")}
-                    onClick={() => setView("users")}
+                        variant={view === "users" ? "contained" : "outlined"}
+                        sx={usersButton(view === "users")}
+                        onClick={() => setView("users")}
                     >
-                    Manage Users
+                        Manage Users
                     </Button>
                 )}
 
@@ -68,22 +75,23 @@ export default function App() {
                 >
                     Science Schedule
                 </Button>
-                    {role !== "guest" && (
-                        <Button
-                            variant={view === "media" ? "contained" : "outlined"}
-                            onClick={() => setView("media")}
-                        >
+
+                {role !== "guest" && (
+                    <Button
+                        variant={view === "media" ? "contained" : "outlined"}
+                        onClick={() => setView("media")}
+                    >
                         Media
-                </Button>
+                    </Button>
                 )}
 
                 {role === "admin" && HOME_AUTOMATION_ENABLED && (
                     <Button
-                    variant={view === "home" ? "contained" : "outlined"}
-                    sx={homeButton(view === "home")}
-                    onClick={() => setView("home")}
+                        variant={view === "home" ? "contained" : "outlined"}
+                        sx={homeButton(view === "home")}
+                        onClick={() => setView("home")}
                     >
-                    Home Automation
+                        Home Automation
                     </Button>
                 )}
             </Box>
@@ -92,20 +100,19 @@ export default function App() {
             <Container
                 maxWidth="sm"
                 sx={{
-                mt: 4,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                    mt: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                 }}
             >
-                {/* <VersionDisplay version={version} /> */}
                 {view === "tasks" && <TasksPage token={token} role={role} username={username} />}
                 {view === "users" && <UsersPage token={token} role={role} />}
                 {view === "home" && <CameraPage token={token} role={role} />}
                 {view === "media" && <MediaPage token={token} role={role} />}
                 {view === "science" && <SciencePage />}
                 {view === "profile" && <ProfilePage />}
-        </Container>
-        </>
+            </Container>
+        </ThemeProvider>
     );
 }
