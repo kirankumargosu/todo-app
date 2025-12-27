@@ -102,11 +102,14 @@ export default function MediaPage({ token, role }: Props) {
                     <CardMedia
                       component={item.type === "video" ? "video" : "img"}
                       height="140"
-                      src={`${MEDIA_API_URL}/stream?path=${encodeURIComponent(
-                        path ? `${path}/${item.name}` : item.name
-                      )}`}
+                      src={
+                        item.type === "image" ? item.thumbnailUrl : `${MEDIA_API_URL}/stream?path=${encodeURIComponent(
+                          path ? `${path}/${item.name}` : item.name
+                        )}`
+                      }
                       preload={item.type === "video" ? "metadata" : undefined}
                       controls={item.type === "video"}
+                      loading={item.type === "image" ? "lazy" : undefined}
                     />
                     {item.type === "video" && (
                       <PlayCircleOutlineIcon
