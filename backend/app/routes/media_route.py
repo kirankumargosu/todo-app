@@ -4,7 +4,7 @@ from starlette.requests import Request
 from pathlib import Path
 import os
 import mimetypes
-from PIL import Image
+from PIL import Image, ExifTags
 
 media_router = APIRouter(prefix="/media", tags=["media"])
 
@@ -13,7 +13,7 @@ media_router = APIRouter(prefix="/media", tags=["media"])
 # ---------------------------------------------------
 MEDIA_ROOT = Path(os.getenv("MEDIA_MOUNT", "/mnt/media")).resolve()
 THUMBNAIL_DIR = MEDIA_ROOT / ".thumbnails"
-THUMBNAIL_DIR.mkdir(exist_ok=True)
+THUMBNAIL_DIR.mkdir(exist_ok=True, parents=True)
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 VIDEO_EXTS = {".mp4", ".mkv", ".avi", ".mov"}
@@ -28,6 +28,31 @@ def safe_resolve(relative_path: str) -> Path:
     if not str(resolved).startswith(str(MEDIA_ROOT)):
         raise HTTPException(status_code=403, detail="Invalid path")
     return resolved
+
+def generate_thumbnail(file_path: Path, thumb_path: Path, size=THUMBNAIL_SIZE):
+    """Create a thumbnail with EXIF orientation fix."""
+    img = Image.open(file_path)
+
+    # Fix orientation according to EXIF
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == "Orientation":
+                break
+        exif = img._getexif()
+        if exif is not None:
+            orientation_value = exif.get(orientation)
+            if orientation_value == 3:
+                img = img.rotate(180, expand=True)
+            elif orientation_value == 6:
+                img = img.rotate(270, expand=True)
+            elif orientation_value == 8:
+                img = img.rotate(90, expand=True)
+    except Exception:
+        pass  # ignore if no EXIF
+
+    img.thumbnail(size)
+    thumb_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(thumb_path)
 
 # ---------------------------------------------------
 # 1️⃣ Browse folders & media
@@ -78,7 +103,7 @@ def get_thumbnail(path: str = Query(...)):
         raise HTTPException(status_code=404, detail="File not found")
 
     if file_path.suffix.lower() not in IMAGE_EXTS:
-        # Non-image files return original file (or optionally a video poster frame)
+        # Non-image files → return original file
         media_type, _ = mimetypes.guess_type(str(file_path))
         media_type = media_type or "application/octet-stream"
         return FileResponse(file_path, media_type=media_type, filename=file_path.name)
@@ -86,10 +111,7 @@ def get_thumbnail(path: str = Query(...)):
     # Create thumbnail path inside .thumbnails
     thumb_path = THUMBNAIL_DIR / f"{file_path.relative_to(MEDIA_ROOT).as_posix().replace('/', '__')}"
     if not thumb_path.exists():
-        thumb_path.parent.mkdir(parents=True, exist_ok=True)
-        img = Image.open(file_path)
-        img.thumbnail(THUMBNAIL_SIZE)
-        img.save(thumb_path)
+        generate_thumbnail(file_path, thumb_path)
 
     media_type, _ = mimetypes.guess_type(str(thumb_path))
     media_type = media_type or "image/jpeg"
