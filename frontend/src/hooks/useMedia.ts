@@ -4,6 +4,7 @@ import { MEDIA_API_URL } from "../api/config";
 export type MediaItem = {
   name: string;
   type: "folder" | "image" | "video";
+  thumbnailUrl?: string; // optional for images
 };
 
 export function useMedia() {
@@ -32,7 +33,21 @@ export function useMedia() {
       }
 
       const data: MediaItem[] = await res.json();
-      setItems(data);
+
+      // For images, set thumbnail URL instead of full stream URL
+      const itemsWithThumbs = data.map(item => {
+        if (item.type === "image") {
+          return {
+            ...item,
+            thumbnailUrl: `${MEDIA_API_URL}/thumbnail?path=${encodeURIComponent(
+              newPath ? `${newPath}/${item.name}` : item.name
+            )}`,
+          };
+        }
+        return item;
+      });
+
+      setItems(itemsWithThumbs);
       setPath(newPath);
     } catch (e: any) {
       setError(e.message ?? "Unknown error");
@@ -41,9 +56,6 @@ export function useMedia() {
     }
   }, []);
 
-  /**
-   * Initial load → root of media directory
-   */
   useEffect(() => {
     load("");
   }, [load]);
@@ -53,7 +65,7 @@ export function useMedia() {
     path,
     loading,
     error,
-    navigate: load, // semantic alias
+    navigate: load,
     reload: () => load(path),
   };
 }
