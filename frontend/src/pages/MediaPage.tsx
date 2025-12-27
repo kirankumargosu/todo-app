@@ -1,109 +1,129 @@
+import React, { useState } from "react";
 import {
   Box,
   Card,
   CardActionArea,
   CardContent,
   CardMedia,
-  //Grid,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-
 import FolderIcon from "@mui/icons-material/Folder";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import { Breadcrumbs, Link } from "@mui/material";
+import { useMedia } from "../hooks/useMedia";
+import { MEDIA_API_URL } from "../api/config";
 
-type MediaItem = {
-  id: number;
-  name: string;
-  type: "folder" | "image" | "video";
-  thumbnailUrl?: string;
+type Props = {
+  token: string | null;
+  role: string | null;
 };
 
-export default function MediaPage() {
-  // 🔹 Temporary mock data (replace with API later)
-  const items: MediaItem[] = [
-    { id: 1, name: "Family", type: "folder" },
-    { id: 2, name: "Vacation", type: "folder" },
-    {
-      id: 3,
-      name: "Beach.jpg",
-      type: "image",
-      thumbnailUrl: "https://via.placeholder.com/300",
-    },
-    {
-      id: 4,
-      name: "Birthday.mp4",
-      type: "video",
-      thumbnailUrl: "https://via.placeholder.com/300",
-    },
-  ];
+export default function MediaPage({ token, role }: Props) {
+  const { items, path, loading, error, navigate } = useMedia();
+  const pathParts = path ? path.split("/").filter(Boolean) : [];
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+
+  const openItem = (item: any) => {
+    if (item.type === "folder") {
+      navigate(path ? `${path}/${item.name}` : item.name);
+    } else if (item.type === "video") {
+      window.open(
+        `${MEDIA_API_URL}/stream?path=${encodeURIComponent(
+          path ? `${path}/${item.name}` : item.name
+        )}`,
+        "_blank"
+      );
+    }
+  };
+
+  const navigateTo = (index: number) => {
+    const newPath = pathParts.slice(0, index + 1).join("/");
+    navigate(newPath);
+  };
+
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Media Library
-      </Typography>
+      <Breadcrumbs sx={{ mb: 2 }}>
+        <Link
+          underline="hover"
+          color="inherit"
+          sx={{ cursor: "pointer" }}
+          onClick={() => navigate("")}
+        >
+          Media Library
+        </Link>
 
-      <Grid container spacing={2}>
+        {pathParts.map((part, index) => (
+          <Link
+            key={index}
+            underline="hover"
+            color={index === pathParts.length - 1 ? "text.primary" : "inherit"}
+            sx={{ cursor: "pointer" }}
+            onClick={() => navigateTo(index)}
+          >
+            {part}
+          </Link>
+        ))}
+      </Breadcrumbs>
+
+        <Grid container spacing={2}>
         {items.map(item => (
-            <Grid key={item.id} size={{ xs: 6, sm: 4, md: 3 }}>
-                <Card
-              sx={{
-                borderRadius: 2,
-                border: "1px solid rgba(0,0,0,0.08)",
-              }}
-            >
-              <CardActionArea onClick={() => console.log("Open", item)}>
+            <Grid key={item.name} size={{xs: 6, sm: 4, md: 3}}>
+            <Card sx={{ borderRadius: 2 }}>
+                <CardActionArea onClick={() => openItem(item)}>
                 {item.type === "folder" ? (
-                  <Box
+                    <Box
                     sx={{
-                      height: 140,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "#f5f5f5",
+                        height: 140,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#f5f5f5",
                     }}
-                  >
-                    <FolderIcon sx={{ fontSize: 60, color: "#757575" }} />
-                  </Box>
+                    >
+                    <FolderIcon sx={{ fontSize: 60 }} />
+                    </Box>
                 ) : (
-                  <Box sx={{ position: "relative" }}>
+                    <Box sx={{ position: "relative" }}>
                     <CardMedia
-                      component="img"
+                      component={item.type === "video" ? "video" : "img"}
                       height="140"
-                      image={item.thumbnailUrl}
-                      alt={item.name}
+                      src={`${MEDIA_API_URL}/stream?path=${encodeURIComponent(
+                        path ? `${path}/${item.name}` : item.name
+                      )}`}
+                      preload={item.type === "video" ? "metadata" : undefined}
+                      controls={item.type === "video"}
                     />
                     {item.type === "video" && (
-                      <PlayCircleOutlineIcon
+                        <PlayCircleOutlineIcon
                         sx={{
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          fontSize: 48,
-                          color: "rgba(255,255,255,0.9)",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            fontSize: 48,
+                            color: "rgba(255,255,255,0.8)",
                         }}
-                      />
+                        />
                     )}
-                  </Box>
+                    </Box>
                 )}
-
                 <CardContent sx={{ p: 1 }}>
-                  <Typography
-                    variant="body2"
-                    noWrap
-                    title={item.name}
-                    sx={{ textAlign: "center" }}
-                  >
+                    <Typography variant="body2" noWrap align="center">
                     {item.name}
-                  </Typography>
+                    </Typography>
                 </CardContent>
-              </CardActionArea>
+                </CardActionArea>
             </Card>
-          </Grid>
+            </Grid>
         ))}
-      </Grid>
+        </Grid>
+
     </Box>
   );
 }
