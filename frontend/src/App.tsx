@@ -102,6 +102,7 @@ export default function App() {
                 {view === "tasks" && <TasksPage token={token} role={role} username={username} />}
                 {view === "users" && <UsersPage token={token} role={role} />}
                 {view === "home" && <CameraPage token={token} role={role} />}
+                {view === "media" && <MediaPage token={token} role={role} />}
                 {view === "science" && <SciencePage />}
                 {view === "profile" && <ProfilePage />}
         </Container>

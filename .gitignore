@@ -11,7 +11,7 @@
 /backend/hls/
 /backend/.venv
 /backend/todo.db
-
+/backend/mnt/media/
 
 do-not-checkin
 
