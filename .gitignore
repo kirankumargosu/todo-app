@@ -1,17 +1,8 @@
-/backend/__pycache__/
-/backend/app/__pycache__/
-/backend/app/db/__pycache__/
-/backend/app/dependencies/__pycache__/
-/backend/app/models/__pycache__/
-/backend/app/routes/__pycache__/
-/backend/app/schemas/__pycache__/
-/backend/app/security/__pycache__/
-/backend/app/utils/__pycache__/
-/backend/app/home/__pycache__/
+**/__pycache__/
 /backend/hls/
 /backend/.venv
 /backend/todo.db
-/backend/mnt/media/
+**/mnt/media/
 
 do-not-checkin
 
