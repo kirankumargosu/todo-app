@@ -8,17 +8,19 @@ import LoginPage from "./pages/LoginPage";
 import TasksPage from "./pages/TasksPage";
 import UsersPage from "./pages/UsersPage";
 import SciencePage from "./pages/SciencePage";
+import WrenAndMartinPage from "./pages/WrenAndMartinPage";
 import CameraPage from "./pages/CameraPage";
 import ProfilePage from "./pages/ProfilePage";
 import MediaPage from "./pages/MediaPage";
-import { getTheme } from "./styles/theme"; // updated theme function
-import { tasksButton, usersButton, scienceButton, homeButton } from "./styles/navButtonStyles";
+import CleanseDashboardPage from "./pages/CleanseDashboardPage";
+import { getTheme } from "./styles/theme";
+import { tasksButton, usersButton, scienceButton, wrenAndMartinButton, homeButton, mediaButton } from "./styles/navButtonStyles";
 
 
 
 export default function App() {
     const { token, role, login, register, logout, username } = useAuth();
-    const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "home" | "profile" | "media">("tasks");
+    const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "wrenandmartin" | "home" | "profile" | "media" | "cleanse">("tasks");
     const commonAppDetails = useCommonAppDetails();
     const HOME_AUTOMATION_ENABLED = process.env.REACT_APP_HOME_AUTOMATION ?? true;
 
@@ -76,12 +78,31 @@ export default function App() {
                     Science Schedule
                 </Button>
 
+                <Button
+                    variant={view === "wrenandmartin" ? "contained" : "outlined"}
+                    sx={wrenAndMartinButton(view === "wrenandmartin")}
+                    onClick={() => setView("wrenandmartin")}
+                >
+                    Wren & Martin
+                </Button>
+
                 {role !== "guest" && (
                     <Button
                         variant={view === "media" ? "contained" : "outlined"}
+                        sx={mediaButton(view === "media")}
                         onClick={() => setView("media")}
                     >
                         Media
+                    </Button>
+                )}
+
+                {role === "admin" && (
+                    <Button
+                        variant={view === "cleanse" ? "contained" : "outlined"}
+                        sx={mediaButton(view === "cleanse")}
+                        onClick={() => setView("cleanse")}
+                    >
+                        Cleanser
                     </Button>
                 )}
 
@@ -94,6 +115,8 @@ export default function App() {
                         Home Automation
                     </Button>
                 )}
+
+
             </Box>
 
             {/* Page content centered */}
@@ -110,7 +133,9 @@ export default function App() {
                 {view === "users" && <UsersPage token={token} role={role} />}
                 {view === "home" && <CameraPage token={token} role={role} />}
                 {view === "media" && <MediaPage token={token} role={role} />}
+                {view === "cleanse" && <CleanseDashboardPage token={token} role={role} />}
                 {view === "science" && <SciencePage />}
+                {view === "wrenandmartin" && <WrenAndMartinPage />}
                 {view === "profile" && <ProfilePage />}
             </Container>
         </ThemeProvider>

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import argparse
 import uvicorn
 import logging
@@ -11,7 +12,7 @@ load_dotenv()
 import os
 # logger.info (os.getenv("DATABASE_URL"))
 
-from app.routes import task_router, auth_router, common_router, camera_router, media_router
+from app.routes import task_router, auth_router, common_router, camera_router, media_router, cleanse_router
 
 app = FastAPI()
 # Allow frontend access
@@ -28,6 +29,11 @@ app.include_router(task_router)
 app.include_router(common_router)
 app.include_router(camera_router)
 app.include_router(media_router)
+app.include_router(cleanse_router)
+
+# Mount media folder so frontend can fetch images
+MEDIA_MOUNT = os.getenv("MEDIA_MOUNT", "/mnt/media/shared/photos")  # default folder 'media'
+app.mount("/media", StaticFiles(directory=MEDIA_MOUNT), name="media")
 
 if __name__ == "__main__":
 

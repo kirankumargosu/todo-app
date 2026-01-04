@@ -1,0 +1,52 @@
+[
+    {
+        "from": "05-Jan-2026",
+        "to": "11-Jan-2026",
+        "grammar": [
+            "01. The Sentence",
+            "02. Subject and Predicate",
+            "03. The Phrase and the Clause",
+            "04. Parts of Speech"
+        ],
+        "comprehension": [
+            "01. Analysis of Simple Sentences"
+        ]
+    },
+    {
+        "from": "12-Jan-2026",
+        "to": "18-Jan-2026",
+        "grammar": [
+            "05. The Noun: Kinds of Nouns",
+            "06. The Noun: Gender",
+            "07. The Noun: Number",
+            "08. The Noun: Case"
+        ],
+        "comprehension": [
+            "02. Phrases"
+        ]
+    },
+    {
+        "from": "19-Jan-2026",
+        "to": "25-Jan-2026",
+        "grammar": [
+            "09. The Adjective",
+            "10. Comparison of Adjectives",
+            "11. Adjectives used as Nouns",
+            "12. Position of the Adjective",
+            "13. The correct use of some Adjectives"
+        ],
+        "comprehension": [
+            "03. Clauses"
+        ]
+    },
+    {
+        "from": "26-Jan-2026",
+        "to": "01-Feb-2026",
+        "grammar": [
+            "14. Articles"
+        ],
+        "comprehension": [
+            "04. Sentences : Simple, Compound and Complex"
+        ]
+    }
+]

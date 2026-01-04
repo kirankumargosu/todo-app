@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { AUTH_API_URL } from "../api/config";
+import { AUTH_API_URL } from "../api/config"
 import type { UseAuthReturn } from "../types/auth";
 
 export function useAuth(): UseAuthReturn {
