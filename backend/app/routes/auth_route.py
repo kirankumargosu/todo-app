@@ -15,7 +15,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
-@auth_router.post("/login/")
+@auth_router.post("/login")
 def login(req: LoginRequest, db: Session = Depends(get_db)):
     print("Login attempt for user:", req.username)
     user = db.query(User).filter(func.lower(User.username) == req.username.lower()).first()
