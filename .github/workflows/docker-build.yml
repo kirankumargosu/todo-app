@@ -42,6 +42,17 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend:${{ env.VERSION }}
 
+      # ---------- Cleanse ----------
+      - name: Build & push cleanse
+        uses: docker/build-push-action@v5
+        with:
+          context: ./cleanse
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/todo-cleanse:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/todo-cleanse:${{ env.VERSION }}
+
       # ---------- Frontend ----------
       - name: Build & push frontend
         uses: docker/build-push-action@v5
