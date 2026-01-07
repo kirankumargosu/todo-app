@@ -50,8 +50,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/todo-cleanse:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/todo-cleanse:${{ env.VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/cleanse:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/cleanse:${{ env.VERSION }}
 
       # ---------- Frontend ----------
       - name: Build & push frontend

@@ -22,7 +22,6 @@ export default function App() {
     const { token, role, login, register, logout, username } = useAuth();
     const [view, setView] = useState<"login" | "tasks" | "users" | "science" | "wrenandmartin" | "home" | "profile" | "media" | "cleanse">("tasks");
     const commonAppDetails = useCommonAppDetails();
-    const HOME_AUTOMATION_ENABLED = process.env.REACT_APP_HOME_AUTOMATION ?? true;
 
     // Detect system dark mode preference
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -106,7 +105,7 @@ export default function App() {
                     </Button>
                 )}
 
-                {role === "admin" && HOME_AUTOMATION_ENABLED && (
+                {role === "admin" && (
                     <Button
                         variant={view === "home" ? "contained" : "outlined"}
                         sx={homeButton(view === "home")}

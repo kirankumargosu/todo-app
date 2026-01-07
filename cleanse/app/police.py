@@ -7,8 +7,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-CLEANSE_API_URL = os.getenv('CLEANSE_API_URL', 'http://localhost:8000/') + '/cleanse/image-dataset'
-API_URL = "http://localhost:8000/cleanse/images/report"  # FastAPI endpoint for reporting
+CLEANSE_API_URL = os.getenv('CLEANSE_API_URL', 'http://localhost:8000')
+REPORT_API_URL = CLEANSE_API_URL + '/cleanse/images/report'
 
 MEDIA_FOLDER = os.getenv('MEDIA_MOUNT', '../mnt/media/shared/photos')
 MEDIA_FOLDER = '../mnt'
@@ -18,11 +18,13 @@ def police_patrol():
     """
     Patrol all folders in MEDIA_FOLDER, scan new images, and report features.
     """
-    new_images = []
+    
     folders_to_ignore = IGNORE_FOLDERS.split(',')
     files_to_ignore = IGNORE_FILES.split(',')
     logger.info(f"Police patrolling {MEDIA_FOLDER}")
     for root, _, files in os.walk(MEDIA_FOLDER):
+        new_images = []
+        logger.info(f"Patrol started for {root}")
         if os.path.isdir(root):
             if root.split('/')[-1] in folders_to_ignore:
                 logger.info(f"Ignored directory {root}")
@@ -30,9 +32,9 @@ def police_patrol():
         
         logger.info(f"Checking files {files}")
         for file in files: 
-            logger.info(f"Checking file {file}")
+            # logger.info(f"Checking file {file}")
             if os.path.isfile(os.path.join(root, file)):
-                logger.info(f"{file} is a file")
+                # logger.info(f"{file} is a file")
                 if file.split('/')[-1] in files_to_ignore:
                     logger.info(f"Ignored file {file}")
                     continue
@@ -43,18 +45,20 @@ def police_patrol():
                 image_data = scan_image(file_path)  # returns dict with hash, blur_score, has_face
                 image_data["path"] = os.path.relpath(file_path, MEDIA_FOLDER)
                 new_images.append(image_data)
+        
+        logger.info(f"Patrol completed for {root}; identified {len(new_images)}")
 
-    if new_images:
-        logger.info(f"Police: Found {len(new_images)} new images. Reporting to FastAPI with {new_images}")        
-        response = requests.post(API_URL, json = new_images)
-        if response.status_code == 200:
-            logger.info("Police: Reported successfully.")
-            # Trigger detective for new images
-            trigger_detective([img["path"] for img in new_images])
+        if new_images:
+            logger.info(f"Police: Found {len(new_images)} new images. Reporting to FastAPI with {new_images}")        
+            response = requests.post(REPORT_API_URL, json = new_images)
+            if response.status_code == 200:
+                logger.info("Police: Reported successfully.")
+                # Trigger detective for new images
+                trigger_detective([img["path"] for img in new_images])
+            else:
+                logger.info("Police: Failed to report images.")
         else:
-            logger.info("Police: Failed to report images.")
-    else:
-        logger.info("Police: No new media found.")
+            logger.info("Police: No new media found.")
 
 def trigger_detective(new_image_paths: List[str]):
     """
