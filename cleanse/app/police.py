@@ -37,7 +37,7 @@ def police_patrol():
                     logger.info(f"Ignored file {file}")
                     continue
 
-            if file.lower().endswith((".jpg", ".png", ".jpeg")):
+            if file.lower().endswith((".jpg", ".png", ".jpeg")) and not file.startswith("._"):
                 file_path = os.path.join(root, file)
                 # logger.info(f"file path is {file_path}")
                 image_data = scan_image(file_path)  # returns dict with hash, blur_score, has_face
