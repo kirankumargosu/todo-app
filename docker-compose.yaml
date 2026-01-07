@@ -27,5 +27,4 @@ services:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=http://backend:8000
-      - REACT_APP_HOME_AUTOMATION=${REACT_APP_HOME_AUTOMATION}
 

@@ -6,10 +6,9 @@ import os
 import logging
 logger = logging.getLogger(__name__)
 
-FASTAPI_URL = "http://localhost:8000"
-CLEANSE_API_URL = os.getenv('CLEANSE_API_URL', 'http://localhost:8000/') + '/cleanse/image-dataset'
-API_URL = "http://localhost:8000/cleanse/images/report"  # FastAPI endpoint for reporting
-
+CLEANSE_API_URL = os.getenv('CLEANSE_API_URL', 'http://localhost:8000')
+FETCH_API_URL = CLEANSE_API_URL + '/cleanse/images/metadata'
+DUPLICATES_API_URL = CLEANSE_API_URL + '/cleanse/images/duplicates'
 
 def detective_run(new_image_paths: List[str] = None):
     """
@@ -19,7 +18,7 @@ def detective_run(new_image_paths: List[str] = None):
     # 1. Fetch images from FastAPI    
     params = {"paths": ",".join(new_image_paths)} if new_image_paths else {}
     logger.info(f"Fetching image via fastapi using {params}")
-    resp = requests.get(f"{FASTAPI_URL}/cleanse/images/metadata", params=params)
+    resp = requests.get(FETCH_API_URL, params=params)
     resp.raise_for_status()
     images = resp.json()["images"]  # [{id, path, hash, blur_score, has_face}, ...]
 
@@ -55,7 +54,7 @@ def detective_run(new_image_paths: List[str] = None):
 
     # 4. Send results to FastAPI
     logger.info(f"Sending results to fastapi")
-    resp = requests.post(f"{FASTAPI_URL}/cleanse/images/duplicates", json = duplicate_groups)
+    resp = requests.post(DUPLICATES_API_URL, json = duplicate_groups)
     if resp.status_code == 200:
         logger.info(f"Detective: {len(duplicate_groups)} duplicates reported to FastAPI.")
     else:

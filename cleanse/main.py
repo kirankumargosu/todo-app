@@ -8,20 +8,20 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 logger = logging.getLogger(__name__)
 logging.getLogger("uvicorn").setLevel(logging.INFO)
 
-CLEANSE_API_URL = os.getenv('CLEANSE_API_URL', 'http://localhost:8000/') + '/cleanse/image-dataset'
+# CLEANSE_API_URL = os.getenv('CLEANSE_API_URL', 'http://localhost:8000/') + '/cleanse/image-dataset'
 
-def trigger_cleanser():
-    """
-    Trigger the cleanser API to remove duplicates or unwanted images.
-    """
-    try:
-        resp = requests.post(CLEANSE_API_URL)
-        if resp.status_code == 200:
-            logger.info("Cleanser: Successfully triggered.")
-        else:
-            logger.info(f"Cleanser: Failed with status {resp.status_code}.")
-    except Exception as e:
-        logger.info(f"Cleanser: Exception occurred - {e}")
+# def trigger_cleanser():
+#     """
+#     Trigger the cleanser API to remove duplicates or unwanted images.
+#     """
+#     try:
+#         resp = requests.post(CLEANSE_API_URL)
+#         if resp.status_code == 200:
+#             logger.info("Cleanser: Successfully triggered.")
+#         else:
+#             logger.info(f"Cleanser: Failed with status {resp.status_code}.")
+#     except Exception as e:
+#         logger.info(f"Cleanser: Exception occurred - {e}")
 
 def main(poll_interval=60):
     """
