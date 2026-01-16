@@ -35,14 +35,8 @@ def detective_run(new_image_paths: List[str] = None):
         if len(group_images) < 2:
             continue  # no duplicates
 
-        # Sort by blur_score descending (least blurry = master)
-        group_images.sort(key=lambda x: (
-                            (x.get("width", 0) or 0) * (x.get("height", 0) or 0),
-                            x.get("blur_score", 0)
-                            ),
-                            reverse=True
-                         )
-        group_images.sort(key=lambda x: x["blur_score"], reverse=True)
+        # Sort by blur_score descending, then by smallest image_id
+        group_images.sort(key=lambda x: (x["blur_score"], -x["id"]), reverse=True)
         master_image_id = group_images[0]["id"]
 
         for img in group_images:

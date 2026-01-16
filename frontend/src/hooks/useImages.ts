@@ -14,7 +14,27 @@ export function useAllImages(token: string) {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
-            setImages(data);
+            // console.log("API Response in useAllImages:", data);
+            const imageArray = data.images || [];
+            const mappedData = imageArray.map((img: any) => ({
+                id: img.id,
+                path: img.path,
+                folder_id: 0, // Default or derived value
+                width: 0, // Default or derived value
+                height: 0, // Default or derived value
+                file_size: 0, // Default or derived value
+                analysis: {
+                    phash: img.hash || "",
+                    has_face: img.has_face,
+                    blur_score: img.blur_score,
+                    checksum: "", // Default or derived value
+                    orientation: 0, // Default or derived value
+                    tags: [], // Default or derived value
+                    duplicates: [], // Default or derived value
+                },
+            }));
+            // console.log("Mapped Data:", mappedData); // Debugging mapped data
+            setImages(mappedData);
             setLoading(false);
         }
         fetchData();
