@@ -2,11 +2,24 @@ import React, { useState } from "react";
 import { useAllImages, useNoFaceImages, useBlurredImages, useDuplicates } from "../hooks/useImages";
 import { ImageGrid } from "../components/ImageGrid";
 import { Image } from "../types/image";
+import { MEDIA_API_URL } from "../api/config";
 import { tabs, imageGrid, imageCard } from "../styles/cleanseDashboardStyles";
+import {
+    Box,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Typography,
+    CircularProgress,
+    Grid,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { ImageCard } from "../components/ImageCard";
 
 interface Props {
-  token: string;
-  role: string | null;
+    token: string;
+    role: string | null;
 }
 
 export default function CleanseDashboardPage({ token, role }: Props) {
@@ -18,17 +31,17 @@ export default function CleanseDashboardPage({ token, role }: Props) {
     const { images: blurredImages, loading: loadingBlurred } = useBlurredImages(token);
     const { images: duplicateImages, loading: loadingDuplicates } = useDuplicates(token, selectedImage?.id);
 
-    let imagesToShow = allImages;
+    let imagesToShow = Array.isArray(allImages) ? allImages : [];
     let loading = loadingAll;
 
     if (activeTab === "noFace") {
-        imagesToShow = noFaceImages;
+        imagesToShow = Array.isArray(noFaceImages) ? noFaceImages : [];
         loading = loadingNoFace;
     } else if (activeTab === "blurred") {
-        imagesToShow = blurredImages;
+        imagesToShow = Array.isArray(blurredImages) ? blurredImages : [];
         loading = loadingBlurred;
     } else if (activeTab === "duplicates") {
-        imagesToShow = duplicateImages;
+        imagesToShow = Array.isArray(duplicateImages) ? duplicateImages : [];
         loading = loadingDuplicates;
     }
 
@@ -54,9 +67,16 @@ export default function CleanseDashboardPage({ token, role }: Props) {
         );
     };
 
+    // console.log("Active Tab:", activeTab);
+    // console.log("Images to Show:", imagesToShow);
+    // console.log("Loading State:", loading);
+
     return (
-        <div>
-            <h2>Cleanse Dashboard</h2>
+        <Box sx={{ width: "100%" }}>
+            <Typography variant="h4" sx={{ mb: 2 }}>
+                Cleanse Dashboard
+            </Typography>
+
             <div style={tabs.container}>
                 {renderTabButton("All Images", "all")}
                 {renderTabButton("Duplicates", "duplicates", !selectedImage)}
@@ -65,12 +85,27 @@ export default function CleanseDashboardPage({ token, role }: Props) {
             </div>
 
             {loading ? (
-                <div>Loading...</div>
+                <CircularProgress />
             ) : (
-                <div style={imageGrid}>
-                    <ImageGrid images={imagesToShow} onImageClick={handleImageClick} />
-                </div>
+                <Grid container spacing={2}>
+                    {imagesToShow.map((image) => (
+                        <Grid key={image.id} size={{ xs: 6, sm: 4, md: 3 }}>
+                            <ImageCard image={image} />
+                        </Grid>
+                    ))}
+                </Grid>
             )}
-        </div>
+        </Box>
     );
 }
+
+<Card
+    sx={{
+        borderRadius: 2,
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderColor: "transparent",
+        transition: "box-shadow 0.2s",
+        "&:hover": { boxShadow: 6 },
+    }}
+></Card>

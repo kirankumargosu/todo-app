@@ -15,11 +15,11 @@ def verify_password(password: str, hash: str) -> bool:
 
 SECRET_KEY = os.getenv("SECRET_KEY", "HIGHLY_CONFIDENTIAL_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_DAYS = int(os.getenv("TOKEN_EXPIRY_IN_DAYS", 60))
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
