@@ -1,4 +1,4 @@
-// export const API_URL = process.env.REACT_APP_API_URL ?? "http://localhost:8000";
+// export const API_URL = "http://localhost:8000";
 export const API_URL = '/api';
 
 export const TASK_API_URL = `${API_URL}/task`;

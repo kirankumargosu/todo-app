@@ -103,10 +103,10 @@ export default function TasksPage({ token, role, username }: Props) {
   const completionPercent = currentGroup
     ? groupedTasks[currentGroup].length > 0
       ? Math.round(
-          (groupedTasks[currentGroup].filter((t) => t.completed).length /
-            groupedTasks[currentGroup].length) *
-            100
-        )
+        (groupedTasks[currentGroup].filter((t) => t.completed).length /
+          groupedTasks[currentGroup].length) *
+        100
+      )
       : 0
     : 0;
 
@@ -203,11 +203,11 @@ export default function TasksPage({ token, role, username }: Props) {
                 role={role}
                 onToggle={toggleTask}
                 onDelete={deleteTask}
+                onUpdate={toggleTask}
               />
             ))}
           </List>
         </Box>
       )}
     </>
-  );
-}
+  );}

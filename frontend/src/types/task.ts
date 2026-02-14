@@ -4,7 +4,9 @@ export interface Task {
   completed: boolean;
   link_url?: string | null;
   notes?: string | null;
+  task_notes?: string | null;
   assigned_user_id?: number | null;
+  last_updated_at: string; // ISO date string
 
   assigned_user?: {
     id: number;

@@ -1,0 +1,192 @@
+[
+    {
+        "id": "1",
+        "topic": "Working with Numbers", 
+        "subtopics": {
+            "1.1": "Multiplying and Dividing Negative Numbers",
+            "1.2": "Factors and HCF",
+            "1.3": "Multiples and LCM",
+            "1.4": "Powers and Roots",
+            "1.5": "Prime Factors"
+        },
+        "school_status": "Y",
+        "home_status": "N"
+    },
+    {
+        "id": "2",
+        "topic": "Geometry", 
+        "subtopics": {
+            "2.1": "Parallel lines",
+            "2.2": "Geometric properties of quadrilaterals",
+            "2.3": "Translations",
+            "2.4": "Enlargements",
+            "2.5": "Constructions"
+        },
+        "school_status": "Y",
+        "home_status": "N"
+    },
+    {
+        "id": "3",
+        "topic": "Probability", 
+        "subtopics": {
+            "3.1": "Multually Exclusive Outcomes and Exhaustive Outcomes",
+            "3.2": "Using a sample space to calculate probabilities",
+            "3.3": "Estimates of Probability"
+        },
+        "school_status": "Y",
+        "home_status": "N"
+    },
+    {
+        "id": "4",
+        "topic": "Percentages", 
+        "subtopics": {
+            "4.1": "Calculating Percentages",
+            "4.2": "Calculating Percentage Increase and Decrease",
+            "4.3": "Calculating Percentage Change"
+        },
+        "school_status": "Y",
+        "home_status": "N"
+    },
+    {
+        "id": "5",
+        "topic": "Congruent Shapes", 
+        "subtopics": {
+            "5.1": "Congruent Shapes",
+            "5.2": "Congruent Triangles",
+            "5.3": "Using Congruent Triangles to solve problems"
+        },
+        "school_status": "Y",
+        "home_status": "N"
+    },
+    {
+        "id": "6",
+        "topic": "Surface Area and Volume of prisms", 
+        "subtopics": {
+            "6.1": "Metric units for area and volume",
+            "6.2": "Surface Area of Prisms",
+            "6.3": "Volume of Prisms"
+        },
+        "school_status": "Y",
+        "home_status": "N"
+    },
+    {
+        "id": "7",
+        "topic": "Graphs", 
+        "subtopics": {
+            "7.1": "Graphs from linear equation",
+            "7.2": "Gradient of a straight line",
+            "7.3": "Graphs from quadratic equations",
+            "7.4": "Real life graphs"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "8",
+        "topic": "Number", 
+        "subtopics": {
+            "8.1": "Powers of 10",
+            "8.2": "Significant Figures",
+            "8.3": "Standard Form with large Numbers",
+            "8.4": "Multiplying with Number in Standard Form"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "9",
+        "topic": "Intepreting data", 
+        "subtopics": {
+            "9.1": "Intepreting graphs and diagrams",
+            "9.2": "Relative sized pie charts",
+            "9.3": "Scatter graphs and correlation",
+            "9.4": "Creating Scatter Graphs"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "10",
+        "topic": "Algebra", 
+        "subtopics": {
+            "10.1": "Algebraic notation",
+            "10.2": "Like terms",
+            "10.3": "Expanding brackets",
+            "10.4": "Using algebraic expressions",
+            "10.5": "Using index notation"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "11",
+        "topic": "Shape and ratio", 
+        "subtopics": {
+            "11.1": "Ratio of lengths, area and volume",
+            "11.2": "Fundamental Enlargements",
+            "11.3": "Map Scales"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "12",
+        "topic": "Fractions and decimals", 
+        "subtopics": {
+            "12.1": "Adding and Subtracting Fractions",
+            "12.2": "Multiplying fraction and integers",
+            "12.3": "Dividing with integers and fractions",
+            "12.4": "Multiplication with large and small numbers",
+            "12.5": "Division with large and small numbers"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "13",
+        "topic": "Proportion", 
+        "subtopics": {
+            "13.1": "Direct proportion",
+            "13.2": "Graph and direct proportion",
+            "13.3": "Inverse proportion",
+            "13.4": "Comparing direct proportion and inverse proportion"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "14",
+        "topic": "Circles", 
+        "subtopics": {
+            "14.1": "The circle and its parts",
+            "14.2": "Formula for circumference of circles",
+            "14.3": "Formula for area of circles"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "15",
+        "topic": "Equations and formulae", 
+        "subtopics": {
+            "15.1": "Equations and brackets",
+            "15.2": "Equations with the variable on both sides",
+            "15.3": "More complex equations",
+            "15.4": "Rearranging formulae"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    },
+    {
+        "id": "16",
+        "topic": "Comparing Data", 
+        "subtopics": {
+            "16.1": "|Grouped frequency tables",
+            "16.2": "Drawing frequency diagrams",
+            "16.3": "Comparing sets of data",
+            "16.4": "Misleading charts"
+        },
+        "school_status": "N",
+        "home_status": "N"
+    }
+]
