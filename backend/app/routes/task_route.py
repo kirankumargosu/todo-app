@@ -5,7 +5,7 @@ from app.schemas.task_schema import TaskCreate, TaskUpdate, TaskResponse
 from sqlalchemy.orm import Session, joinedload
 from app.db.database import get_db
 
-from app.dependencies.dependencies import require_admin
+from app.dependencies.dependencies import require_admin, get_current_user
 import logging
 logger = logging.getLogger(__name__)
 
@@ -25,13 +25,14 @@ def get_tasks(db: Session = Depends(get_db)):
             task_notes=task.task_notes,
             assigned_user_id=task.assigned_user_id,
             assigned_user=task.assigned_user,
-            last_updated_at=task.last_updated_at.isoformat() if task.last_updated_at else ""
+            last_updated_at=task.last_updated_at.isoformat() if task.last_updated_at else "",
+            last_updated_by=task.last_updated_by
         )
         for task in tasks
     ]
 
 @task_router.post("/tasks", response_model=TaskResponse, dependencies=[Depends(require_admin)])
-def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+def create_task(task: TaskCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     logger.debug(task.to_string())
     db_task = Task(
         title=task.title,
@@ -39,7 +40,8 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
         link_url=task.link_url,
         notes=task.notes,
         task_notes=task.task_notes,
-        assigned_user_id=task.assigned_user_id
+        assigned_user_id=task.assigned_user_id,
+        last_updated_by=current_user.username if hasattr(current_user, 'username') else current_user.get("username")
     )
     logger.debug(db_task.to_string())
     db.add(db_task)
@@ -54,11 +56,12 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
         task_notes=db_task.task_notes,
         assigned_user_id=db_task.assigned_user_id,
         assigned_user=db_task.assigned_user,
-        last_updated_at=db_task.last_updated_at.isoformat() if db_task.last_updated_at else ""
+        last_updated_at=db_task.last_updated_at.isoformat() if db_task.last_updated_at else "",
+        last_updated_by=db_task.last_updated_by
     )
 
 @task_router.put("/tasks/{task_id}", response_model=TaskResponse)
-def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
+def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -68,6 +71,7 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
     db_task.notes = task.notes
     db_task.task_notes = task.task_notes
     db_task.assigned_user_id = task.assigned_user_id
+    db_task.last_updated_by = current_user.username if hasattr(current_user, 'username') else current_user.get("username")
     db.commit()
     db.refresh(db_task)
     return TaskResponse(
@@ -79,7 +83,8 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
         task_notes=db_task.task_notes,
         assigned_user_id=db_task.assigned_user_id,
         assigned_user=db_task.assigned_user,
-        last_updated_at=db_task.last_updated_at.isoformat() if db_task.last_updated_at else None
+        last_updated_at=db_task.last_updated_at.isoformat() if db_task.last_updated_at else None,
+        last_updated_by=db_task.last_updated_by
     )
 
 @task_router.delete("/tasks/{task_id}")

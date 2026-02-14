@@ -7,6 +7,7 @@ import {
   ListItemText,
   Typography,
   TextField,
+  Chip,
 } from "@mui/material";
 import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -58,17 +59,19 @@ export function TaskItem({ task, role, onToggle, onDelete, onUpdate }: Props) {
 
       <ListItemText
         primary={
-          <Box display="flex" justifyContent="space-between">
-            <Typography
-              variant="subtitle1"
-              sx={{
-                textDecoration: task.completed
-                  ? "line-through"
-                  : "none",
-              }}
-            >
-              {task.title}
-            </Typography>
+          <Box display="flex" justifyContent="space-between" alignItems="center" gap={1}>
+            <Box display="flex" alignItems="center" gap={1} flex={1}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  textDecoration: task.completed
+                    ? "line-through"
+                    : "none",
+                }}
+              >
+                {task.title}
+              </Typography>
+            </Box>
 
             {task.link_url && (
               <IconButton
@@ -145,8 +148,30 @@ export function TaskItem({ task, role, onToggle, onDelete, onUpdate }: Props) {
               color="text.disabled"
               sx={{ display: "block", mt: 0.5, fontSize: "0.75rem" }}
             >
+              {/* Updated at: {new Date(task.last_updated_at).toLocaleString()} {task.last_updated_by && `by ${task.last_updated_by}`} */}
               Updated at: {new Date(task.last_updated_at).toLocaleString()}
+              {/* {task.last_updated_by && (
+                <Chip
+                  label={task.last_updated_by}
+                  size="small"
+                  variant="outlined"
+                  sx={{ height: "20px", fontSize: "0.7rem" }}
+                />
+              )} */}
             </Typography>
+            {task.last_updated_by && (
+              <Chip
+                label={toTitleCase(task.last_updated_by)}
+                size="small"
+                variant="outlined"
+                sx={{
+                  height: "20px",
+                  fontSize: "0.7rem",
+                  backgroundColor: "rgba(174, 199, 225, 0.1)",
+                  borderColor: "rgba(100, 150, 200, 0.3)"
+                }}
+              />
+            )}
           </>
         }
         secondaryTypographyProps={{ component: "div" }}

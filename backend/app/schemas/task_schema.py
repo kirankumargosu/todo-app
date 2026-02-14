@@ -52,6 +52,7 @@ class TaskResponse(TaskBase):
     id: int
     assigned_user: Optional[AssignedUserOut] = None
     last_updated_at: str  # ISO format
+    last_updated_by: Optional[str] = None
 
     def to_string(self):
         return {'title': self.title,
@@ -60,7 +61,8 @@ class TaskResponse(TaskBase):
                 'task_notes': self.task_notes,
                 'completed': self.completed,
                 'assigned_user_id': self.assigned_user_id,
-                'last_updated_at': self.last_updated_at
+                'last_updated_at': self.last_updated_at,
+                'last_updated_by': self.last_updated_by
                   }
     
     class Config:
