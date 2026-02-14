@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException
 from app.models import Task
 from typing import List
@@ -14,19 +13,49 @@ task_router = APIRouter(prefix="/task", tags=["task"])
 
 @task_router.get("/tasks", response_model=List[TaskResponse])
 def get_tasks(db: Session = Depends(get_db)):
-    tasks = db.query(Task).options(joinedload(Task.assigned_user)).all() 
+    tasks = db.query(Task).options(joinedload(Task.assigned_user)).all()
     logger.debug(tasks)
-    return tasks
+    return [
+        TaskResponse(
+            id=task.id,
+            title=task.title,
+            completed=task.completed,
+            link_url=task.link_url,
+            notes=task.notes,
+            task_notes=task.task_notes,
+            assigned_user_id=task.assigned_user_id,
+            assigned_user=task.assigned_user,
+            last_updated_at=task.last_updated_at.isoformat() if task.last_updated_at else ""
+        )
+        for task in tasks
+    ]
 
 @task_router.post("/tasks", response_model=TaskResponse, dependencies=[Depends(require_admin)])
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     logger.debug(task.to_string())
-    db_task = Task(title=task.title, completed=False, link_url=task.link_url, notes=task.notes, assigned_user_id=task.assigned_user_id)
+    db_task = Task(
+        title=task.title,
+        completed=False,
+        link_url=task.link_url,
+        notes=task.notes,
+        task_notes=task.task_notes,
+        assigned_user_id=task.assigned_user_id
+    )
     logger.debug(db_task.to_string())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
-    return db_task
+    return TaskResponse(
+        id=db_task.id,
+        title=db_task.title,
+        completed=db_task.completed,
+        link_url=db_task.link_url,
+        notes=db_task.notes,
+        task_notes=db_task.task_notes,
+        assigned_user_id=db_task.assigned_user_id,
+        assigned_user=db_task.assigned_user,
+        last_updated_at=db_task.last_updated_at.isoformat() if db_task.last_updated_at else ""
+    )
 
 @task_router.put("/tasks/{task_id}", response_model=TaskResponse)
 def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
@@ -37,10 +66,21 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
     db_task.completed = task.completed
     db_task.link_url = task.link_url
     db_task.notes = task.notes
+    db_task.task_notes = task.task_notes
     db_task.assigned_user_id = task.assigned_user_id
     db.commit()
     db.refresh(db_task)
-    return db_task
+    return TaskResponse(
+        id=db_task.id,
+        title=db_task.title,
+        completed=db_task.completed,
+        link_url=db_task.link_url,
+        notes=db_task.notes,
+        task_notes=db_task.task_notes,
+        assigned_user_id=db_task.assigned_user_id,
+        assigned_user=db_task.assigned_user,
+        last_updated_at=db_task.last_updated_at.isoformat() if db_task.last_updated_at else None
+    )
 
 @task_router.delete("/tasks/{task_id}")
 def delete_task(task_id: int, db: Session = Depends(get_db)):

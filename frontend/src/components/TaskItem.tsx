@@ -6,7 +6,9 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  TextField,
 } from "@mui/material";
+import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Task } from "../types/task";
@@ -18,9 +20,18 @@ type Props = {
   role: string | null;
   onToggle: (task: Task) => void;
   onDelete: (id: number) => void;
+  onUpdate: (task: Task) => void;
 };
 
-export function TaskItem({ task, role, onToggle, onDelete }: Props) {
+export function TaskItem({ task, role, onToggle, onDelete, onUpdate }: Props) {
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [notesValue, setNotesValue] = useState(task.task_notes || "");
+
+  const handleSaveNotes = () => {
+    onUpdate({ ...task, task_notes: notesValue });
+    setEditingNotes(false);
+  };
+
   return (
     <ListItem
       alignItems="flex-start"
@@ -103,6 +114,39 @@ export function TaskItem({ task, role, onToggle, onDelete }: Props) {
                 {task.link_url}
               </Link>
             )}
+
+            {/* {task.task_notes && !editingNotes ? (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ whiteSpace: "pre-wrap", mt: 0.5, p: 1, bgcolor: "#f5f5f5", borderLeft: "3px solid #ccc", cursor: "pointer" }}
+                onClick={() => setEditingNotes(true)}
+              >
+                <strong>Latest Notes:</strong> {task.task_notes}
+              </Typography>
+            ) : (
+              <Box sx={{ mt: 0.5 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Add/Edit Notes"
+                  value={notesValue}
+                  onChange={(e) => setNotesValue(e.target.value)}
+                  onBlur={handleSaveNotes}
+                  onKeyDown={(e) => e.key === "Enter" && handleSaveNotes()}
+                  variant="outlined"
+                  autoFocus={editingNotes}
+                />
+              </Box>
+            )} */}
+
+            <Typography
+              variant="caption"
+              color="text.disabled"
+              sx={{ display: "block", mt: 0.5, fontSize: "0.75rem" }}
+            >
+              Updated at: {new Date(task.last_updated_at).toLocaleString()}
+            </Typography>
           </>
         }
         secondaryTypographyProps={{ component: "div" }}

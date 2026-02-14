@@ -16,7 +16,7 @@ export function useTasks(token: string | null) {
     setLoading(true);
     const res = await fetch(`${TASK_API_URL}/tasks`, {
       headers: authHeaders(),
-    });    
+    });
     setTasks(await res.json());
     setLoading(false);
   };
@@ -46,8 +46,12 @@ export function useTasks(token: string | null) {
       method: "PUT",
       headers: authHeaders(),
       body: JSON.stringify({
-        ...task,
+        title: task.title,
         completed: !task.completed,
+        link_url: task.link_url || null,
+        notes: task.notes || null,
+        task_notes: task.task_notes || null,
+        assigned_user_id: task.assigned_user_id ?? null,
       }),
     });
     loadTasks();
