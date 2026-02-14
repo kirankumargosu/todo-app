@@ -7,6 +7,7 @@ export interface Task {
   task_notes?: string | null;
   assigned_user_id?: number | null;
   last_updated_at: string; // ISO date string
+  last_updated_by?: string | null;
 
   assigned_user?: {
     id: number;

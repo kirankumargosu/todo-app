@@ -85,7 +85,7 @@ export default function App() {
                     Wren & Martin
                 </Button>
 
-                {role !== "guest" && (
+                {role === "admin" && (
                     <Button
                         variant={view === "media" ? "contained" : "outlined"}
                         sx={mediaButton(view === "media")}

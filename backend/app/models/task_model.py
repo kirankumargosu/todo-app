@@ -14,6 +14,7 @@ class Task(Base):
     completed = Column(Boolean, default=False)
     assigned_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     last_updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_updated_by = Column(String, nullable=True)
     
     # relationship
     assigned_user = relationship("User", back_populates="tasks")
@@ -26,5 +27,6 @@ class Task(Base):
                 'task_notes': self.task_notes,
                 'completed': self.completed,
                 'assigned_user_id': self.assigned_user_id,
-                'last_updated_at': self.last_updated_at
+                'last_updated_at': self.last_updated_at,
+                'last_updated_by': self.last_updated_by
                   }
